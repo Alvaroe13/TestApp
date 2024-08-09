@@ -1,13 +1,9 @@
-//@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
-//plugins {
-//    alias(libs.plugins.androidApplication)
-//    alias(libs.plugins.kotlinAndroid)
-//}
-
-
 plugins {
     id("com.android.application")
     id("kotlin-android")
+    id("kotlin-kapt")
+    id("androidx.navigation.safeargs.kotlin")
+    id("dagger.hilt.android.plugin")
 }
 
 apply(from = "$rootDir/feature-dependencies.gradle")
@@ -59,4 +55,5 @@ android {
 }
 
 dependencies {
+    implementation(project(":main"))
 }

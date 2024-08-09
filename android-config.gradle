@@ -1,0 +1,42 @@
+android {
+    buildFeatures {
+        buildConfig = true
+    }
+
+    compileSdkVersion Integer.parseInt(libs.versions.compile.sdk.get())
+    buildToolsVersion libs.versions.build.tools.get()
+
+    defaultConfig {
+        minSdkVersion  Integer.parseInt(libs.versions.min.sdk.get())
+        targetSdkVersion  Integer.parseInt(libs.versions.target.sdk.get())
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'proguard-rules.pro'
+
+        vectorDrawables {
+            useSupportLibrary = true
+        }
+    }
+    buildTypes {
+        debug {}
+        release {}
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17.toString()
+    }
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.androidx.compose.compiler.get()
+    }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+}

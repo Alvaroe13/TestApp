@@ -1,4 +1,4 @@
-package com.ai.testapp.ui.theme
+package com.ai.commonbrary.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

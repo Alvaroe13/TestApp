@@ -8,6 +8,13 @@ dependencies {
     implementation libs.ui.tooling.preview
     implementation libs.material3
 
+    //Dagger
+    implementation libs.dagger
+    implementation libs.dagger.navigation
+    implementation libs.dagger.navigation.compose
+    kapt libs.dagger.compiler
+
+
     debugImplementation libs.ui.tooling
     debugImplementation libs.ui.test.manifest
 }

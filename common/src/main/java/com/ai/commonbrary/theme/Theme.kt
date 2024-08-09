@@ -1,4 +1,4 @@
-package com.ai.testapp.ui.theme
+package com.ai.commonbrary.theme
 
 import android.app.Activity
 import android.os.Build
