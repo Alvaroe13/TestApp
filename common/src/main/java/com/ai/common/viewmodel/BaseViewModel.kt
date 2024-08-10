@@ -17,13 +17,13 @@ abstract class BaseViewModel<S: ScreenState, A: Action, E: Effect>: ViewModel() 
     protected val currentScreenState: S get() = screenState.value
 
     private val _screenState: MutableStateFlow<S> by lazy { MutableStateFlow(initialScreenState) }
-    val screenState by lazy { _screenState.asStateFlow() }
+    val screenState = _screenState.asStateFlow()
 
     private val _actions = MutableSharedFlow<A>()
     protected val actions = _actions.asSharedFlow()
 
-    private val _effects = Channel<E>()
-    protected val effects = _effects.receiveAsFlow()
+    private val _effect = Channel<E>()
+    val effect = _effect.receiveAsFlow()
 
     init{
         viewModelScope.launch {
@@ -41,7 +41,7 @@ abstract class BaseViewModel<S: ScreenState, A: Action, E: Effect>: ViewModel() 
     protected abstract suspend fun handleActions(action: A)
     fun setAction(action: A) = viewModelScope.launch { _actions.emit(action) }
 
-    protected fun setEffect(effect: ()-> E) = viewModelScope.launch { _effects.send(effect()) }
+    protected fun setEffect(effect: ()-> E) = viewModelScope.launch { _effect.send(effect()) }
 
     protected fun setScreenState(state: S.()-> S) {
         _screenState.value = currentScreenState.state()

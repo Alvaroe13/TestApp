@@ -1,4 +1,4 @@
-package com.ai.main.navigation
+package com.ai.common.navigation
 
 sealed class ScreenDestinations(val route: String) {
     object NoteListScreen: ScreenDestinations("note_list_screen")

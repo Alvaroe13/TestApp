@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.ai.common.navigation.ScreenDestinations
 
 @Composable
 fun MainNavHost(
@@ -16,6 +17,6 @@ fun MainNavHost(
         navController = navController,
         startDestination = startDestination.route,
         modifier = modifier,
-        builder = { mainNavGraph() }
+        builder = { mainNavGraph(navController) }
     )
 }

@@ -1,41 +1,156 @@
 package com.ai.notelist
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.ai.common.components.NoteCard
+import com.ai.common.navigation.ScreenDestinations
 import com.ai.common.theme.TestAppTheme
+import com.ai.common.utils.HandleEffects
+import com.ai.common_domain.entities.NoteEntity
 
 
 @Composable
-fun NoteListScreen(viewModel: NoteListViewModel = hiltViewModel()) {
+fun NoteListScreen(
+    viewModel: NoteListViewModel = hiltViewModel(),
+    navController: NavController,
+) {
 
+    val state by viewModel.screenState.collectAsState()
 
+    HandleEffects(effectFlow = viewModel.effect ) { effect ->
+        when(effect) {
+            is NoteListScreenEffects.CreateNewNoteClicked -> {
+                navController.navigate(ScreenDestinations.NoteDetailsScreen.route)
+            }
+        }
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        Greeting("Note list screen")
+        UiContent(state = state, action = viewModel::setAction)
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+private fun UiContent(
+    state: NoteListScreenState,
+    action: (action: NoteListScreenActions) -> Unit
+) {
+    if (state.error) {
+        ErrorContent()
+    } else {
+        if (state.isLoading) LoadingContent()
+        else ValidContent(state = state, action = action)
+    }
+}
+@Composable
+private fun ValidContent(state: NoteListScreenState, action: (NoteListScreenActions) -> Unit) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            items(state.notes) { note ->
+                NoteCard(
+                    title = note.title,
+                    description = note.description
+                ) {
+                    action(NoteListScreenActions.OnNoteSelectedClick(note))
+                }
+            }
+        }
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(end = 8.dp, bottom = 8.dp),
+            horizontalAlignment = Alignment.End,
+            verticalArrangement = Arrangement.Bottom
+        ) {
+            Button(
+                modifier = Modifier
+                    .width(55.dp)
+                    .height(55.dp),
+                onClick = { action(NoteListScreenActions.OnNewNoteClick) },
+                shape = CircleShape,
+            ) {
+                Icon(Icons.Filled.Add, null)
+            }
+        }
+    }
+}
+
+@Composable
+fun LoadingContent() {
+    //Could be a generic one
+}
+
+
+@Composable
+fun ErrorContent() {
+    //Could be a generic one
 }
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+private fun NoteListScreenPreview() {
     TestAppTheme {
-        Greeting("Android")
+        ValidContent(state = NoteListScreenState(notes = mockNotes()), action =  {} )
     }
 }
+
+private fun mockNotes(): List<NoteEntity> =
+    buildList {
+        add(
+            NoteEntity(
+                id = 1,
+                title = "This is the title",
+                description = "This is a description"
+            )
+        )
+        add(
+            NoteEntity(
+                id = 1,
+                title = "This is the title",
+                description = "This is a description"
+            )
+        )
+        add(
+            NoteEntity(
+                id = 1,
+                title = "This is the title",
+                description = "This is a description"
+            )
+        )
+        add(
+            NoteEntity(
+                id = 1,
+                title = "This is the title",
+                description = "This is a description"
+            )
+        )
+    }
