@@ -7,6 +7,7 @@ import com.ai.common.theme.TestAppTheme
 import com.ai.common.compositions.LocalParentActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import com.ai.common.utils.HandleEffects
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,9 +19,12 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun MainScreen() {
         TestAppTheme {
-            CompositionLocalProvider {
+            CompositionLocalProvider (
                 LocalParentActivity provides this
+            ) {
+                //HandleEffects(effectFlow = , content = )
             }
+
         }
     }
 }
