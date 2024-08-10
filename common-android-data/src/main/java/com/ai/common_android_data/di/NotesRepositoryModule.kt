@@ -2,7 +2,10 @@ package com.ai.common_android_data.di
 
 import android.content.Context
 import androidx.room.Room
+import com.ai.common_android_data.DispatcherProvider
+import com.ai.common_android_data.DispatcherProviderImpl
 import com.ai.common_android_data.NotesRepositoryImpl
+import com.ai.common_android_data.datasource.NotesDao
 import com.ai.common_android_data.datasource.NotesDatabase
 import com.ai.common_domain.respository.NotesRepository
 import dagger.Binds
@@ -21,6 +24,10 @@ abstract class NotesRepositoryModule {
     @Singleton
     abstract fun bindNotesRepo(impl: NotesRepositoryImpl): NotesRepository
 
+    @Binds
+    @Singleton
+    abstract fun dispatcherProvider(dispatcherProviderImpl: DispatcherProviderImpl): DispatcherProvider
+
 
     companion object {
 
@@ -32,6 +39,12 @@ abstract class NotesRepositoryModule {
                 NotesDatabase::class.java,
                 NotesDatabase.DATABASE_NAME
             ).build()
+        }
+
+        @Provides
+        @Singleton
+        fun provideNoteDao(noteDatabase: NotesDatabase): NotesDao {
+            return noteDatabase.getDao()
         }
 
     }

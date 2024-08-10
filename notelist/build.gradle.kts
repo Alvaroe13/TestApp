@@ -13,4 +13,5 @@ android.namespace = "com.ai.notelist"
 
 dependencies {
     implementation(project(":common"))
+    implementation(project(":common-android-data"))
 }

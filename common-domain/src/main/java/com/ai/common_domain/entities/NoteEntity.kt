@@ -1,4 +1,7 @@
 package com.ai.common_domain.entities
 
-class NoteEntity {
-}
+data class NoteEntity(
+    val id: Int,
+    val title: String,
+    val description: String
+)

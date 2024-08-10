@@ -14,6 +14,7 @@ abstract class BaseViewModel<S: ScreenState, A: Action, E: Effect>: ViewModel() 
 
     private val initialScreenState: S by lazy { createInitialScreenSate() }
     protected abstract fun createInitialScreenSate(): S
+    protected val currentScreenState: S get() = screenState.value
 
     private val _screenState: MutableStateFlow<S> by lazy { MutableStateFlow(initialScreenState) }
     val screenState by lazy { _screenState.asStateFlow() }
@@ -42,5 +43,8 @@ abstract class BaseViewModel<S: ScreenState, A: Action, E: Effect>: ViewModel() 
 
     protected fun setEffect(effect: ()-> E) = viewModelScope.launch { _effects.send(effect()) }
 
+    protected fun setScreenState(state: S.()-> S) {
+        _screenState.value = currentScreenState.state()
+    }
 
 }

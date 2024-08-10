@@ -6,9 +6,19 @@ import javax.inject.Inject
 
 class NoteMapper @Inject constructor() {
 
-    fun map(noteDto: NoteDto) : NoteEntity {
+    fun mapTo(noteDto: NoteDto) : NoteEntity {
         return NoteEntity(
+            id = noteDto.id,
+            title = noteDto.title,
+            description = noteDto.descrption
+        )
+    }
 
+    fun mapFrom(noteEntity: NoteEntity): NoteDto {
+        return NoteDto(
+            id = noteEntity.id,
+            title = noteEntity.title,
+            descrption = noteEntity.description
         )
     }
 }

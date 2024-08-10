@@ -7,5 +7,7 @@ import com.ai.common_android_data.datasource.NotesDatabase
 @Entity(tableName = NotesDatabase.DATABASE_NAME)
 data class NoteDto(
     @PrimaryKey(autoGenerate = false)
-    val id: Int
+    var id: Int,
+    var title: String = "",
+    var descrption: String = ""
 )
