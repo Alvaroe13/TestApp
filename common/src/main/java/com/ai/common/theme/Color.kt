@@ -1,4 +1,4 @@
-package com.ai.commonbrary.theme
+package com.ai.common.theme
 
 import androidx.compose.ui.graphics.Color
 
