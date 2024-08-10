@@ -12,12 +12,13 @@ class NoteListViewModel @Inject constructor(
 ) : BaseViewModel<NoteListScreenState, NoteListScreenActions, NoteListScreenEffects> (){
 
 
-    override fun createInitialScreenSate(): NoteListScreenState {
-        TODO("Not yet implemented")
-    }
+    override fun createInitialScreenSate(): NoteListScreenState = NoteListScreenState()
 
     override suspend fun handleActions(action: NoteListScreenActions) {
-        TODO("Not yet implemented")
+       when(action) {
+           is NoteListScreenActions.LoadNotes ->  {} // load
+           else -> {}
+       }
     }
 }
 
@@ -30,5 +31,5 @@ sealed class NoteListScreenEffects : Effect{
 }
 
 sealed class NoteListScreenActions : Action {
-
+    object LoadNotes : NoteListScreenActions()
 }
