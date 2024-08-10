@@ -15,7 +15,9 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ai.common.components.NoteCard
+import com.ai.common.components.TopBar
 import com.ai.common.navigation.ScreenDestinations
 import com.ai.common.theme.TestAppTheme
 import com.ai.common.utils.HandleEffects
@@ -58,19 +61,37 @@ fun NoteListScreen(
 
 @Composable
 private fun UiContent(
+    modifier : Modifier = Modifier,
     state: NoteListScreenState,
     action: (action: NoteListScreenActions) -> Unit
 ) {
-    if (state.error) {
-        ErrorContent()
-    } else {
-        if (state.isLoading) LoadingContent()
-        else ValidContent(state = state, action = action)
+    Scaffold(
+        topBar = {
+            TopBar(
+                title = { Text(text = "Title") },
+                actions = { }
+            )
+        }
+    ) { paddingValues ->
+         if (state.error) {
+             ErrorContent(modifier.padding(paddingValues))
+         } else {
+             if (state.isLoading) LoadingContent(modifier.padding(paddingValues))
+             else ValidContent(
+                 modifier = modifier.padding(paddingValues),
+                 state = state,
+                 action = action
+             )
+         }
     }
 }
 @Composable
-private fun ValidContent(state: NoteListScreenState, action: (NoteListScreenActions) -> Unit) {
-    Box(modifier = Modifier.fillMaxSize()) {
+private fun ValidContent(
+    modifier : Modifier = Modifier,
+    state: NoteListScreenState,
+    action: (NoteListScreenActions) -> Unit
+) {
+    Box(modifier = modifier.fillMaxSize()) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(state.notes) { note ->
                 NoteCard(
@@ -105,13 +126,13 @@ private fun ValidContent(state: NoteListScreenState, action: (NoteListScreenActi
 }
 
 @Composable
-fun LoadingContent() {
+fun LoadingContent(modifier : Modifier = Modifier) {
     //Could be a generic one
 }
 
 
 @Composable
-fun ErrorContent() {
+fun ErrorContent(modifier : Modifier = Modifier) {
     //Could be a generic one
 }
 

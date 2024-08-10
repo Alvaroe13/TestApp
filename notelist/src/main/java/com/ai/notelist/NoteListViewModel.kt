@@ -26,13 +26,11 @@ class NoteListViewModel @Inject constructor(
         viewModelScope.launch(dispatcherProvider.io()) {
             val notes = notesRepository.getAllNotes()
             if (notes is ResultWrapper.Success) { // Instead of if/else block in every screen we could create an extension function delivering the result with a more sophisticated logic
-                println("NoteListViewModel if")
                 setScreenState {
                     copy(notes = notes.data)
                 }
             }
             if (notes is ResultWrapper.Failure) {
-                println("NoteListViewModel else")
                 setScreenState {
                     copy(error = true) // here we should implement a more sophisticated error handling mechanism but for this demo it does the trick
                 }
