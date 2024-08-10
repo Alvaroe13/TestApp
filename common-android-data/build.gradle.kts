@@ -11,5 +11,5 @@ apply(from = "$rootDir/android-config.gradle")
 android.namespace = "com.ai.common_android_data"
 
 dependencies {
-    implementation(project(":common-domain"))
+    api(project(":common-domain"))
 }

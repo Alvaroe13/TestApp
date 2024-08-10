@@ -8,7 +8,7 @@ import androidx.navigation.compose.NavHost
 @Composable
 fun MainNavHost(
     modifier: Modifier = Modifier,
-    startDestination: ScreenDestinations = ScreenDestinations.NoteListScreen,
+    startDestination: ScreenDestinations = ScreenDestinations.NoteDetailsScreen,
     navController: NavHostController
 ) {
 

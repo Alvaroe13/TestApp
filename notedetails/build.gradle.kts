@@ -9,10 +9,9 @@ plugins {
 apply(from = "$rootDir/feature-dependencies.gradle")
 apply(from = "$rootDir/android-config.gradle")
 
-android.namespace = "com.ai.main"
+android.namespace = "com.ai.notedetails"
 
 dependencies {
     implementation(project(":common"))
-    implementation(project(":notelist"))
-    implementation(project(":notedetails"))
+    implementation(project(":common-domain"))
 }

@@ -2,6 +2,7 @@ package com.ai.main.navigation
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.ai.notedetails.NoteDetailsScreen
 import com.ai.notelist.NoteListScreen
 
 fun NavGraphBuilder.mainNavGraph() {
@@ -9,6 +10,6 @@ fun NavGraphBuilder.mainNavGraph() {
         NoteListScreen()
     }
     composable(route = ScreenDestinations.NoteDetailsScreen.route) {
-        //to be implemented
+        NoteDetailsScreen()
     }
 }
