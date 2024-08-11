@@ -8,6 +8,7 @@ import com.ai.common_android_data.datasource.NotesDatabase
 data class NoteDto(
     @PrimaryKey(autoGenerate = false)
     var id: Int,
-    var title: String = "",
-    var descrption: String = ""
+    var name: String = "",
+    var descrption: String = "",
+    var type: String = ""
 )

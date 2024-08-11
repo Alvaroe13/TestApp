@@ -74,19 +74,20 @@ private fun UiContent(
                 title = { Text(text = stringResource(id = R.string.`object`)) },
                 actions = { }
             )
+        },
+        content = { paddingValues ->
+            if (state.error) {
+                ErrorContent(modifier.padding(paddingValues))
+            } else {
+                if (state.isLoading) LoadingContent(modifier.padding(paddingValues))
+                else ValidContent(
+                    modifier = modifier.padding(paddingValues),
+                    state = state,
+                    action = action
+                )
+            }
         }
-    ) { paddingValues ->
-         if (state.error) {
-             ErrorContent(modifier.padding(paddingValues))
-         } else {
-             if (state.isLoading) LoadingContent(modifier.padding(paddingValues))
-             else ValidContent(
-                 modifier = modifier.padding(paddingValues),
-                 state = state,
-                 action = action
-             )
-         }
-    }
+    )
 }
 @Composable
 private fun ValidContent(

@@ -5,7 +5,7 @@ import com.ai.common_domain.entities.NoteEntity
 import com.ai.common_domain.respository.NotesRepository
 import com.chrynan.inject.Inject
 
-class GetNoteById @Inject constructor(
+class GetNoteByIdUseCase @Inject constructor(
     private val repository: NotesRepository
 ) {
 
