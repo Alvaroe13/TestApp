@@ -23,7 +23,7 @@ fun NavGraphBuilder.mainNavGraph(navController: NavController,) {
             }
         )
     ) {
-        NoteDetailsScreen()
+        NoteDetailsScreen(navController = navController)
     }
 }
 

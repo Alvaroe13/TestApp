@@ -23,6 +23,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -34,7 +35,6 @@ import com.ai.common.theme.TestAppTheme
 import com.ai.common.utils.HandleEffects
 import com.ai.common_domain.entities.NoteEntity
 
-
 @Composable
 fun NoteListScreen(
     viewModel: NoteListViewModel = hiltViewModel(),
@@ -43,7 +43,7 @@ fun NoteListScreen(
 
     val state by viewModel.screenState.collectAsState()
 
-    HandleEffects(effectFlow = viewModel.effect ) { effect ->
+    HandleEffects(effectFlow = viewModel.effect) { effect ->
         when(effect) {
             is NoteListScreenEffects.CreateNewNoteClicked -> {
                 navController.navigate(ScreenDestinations.NoteDetailsScreen.route)
@@ -71,7 +71,7 @@ private fun UiContent(
     Scaffold(
         topBar = {
             TopBar(
-                title = { Text(text = "Title") },
+                title = { Text(text = stringResource(id = R.string.`object`)) },
                 actions = { }
             )
         }

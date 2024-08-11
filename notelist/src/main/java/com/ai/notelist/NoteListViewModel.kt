@@ -51,7 +51,7 @@ class NoteListViewModel @Inject constructor(
 data class NoteListScreenState(
     val isLoading: Boolean = false,
     val notes: List<NoteEntity> = emptyList(),
-    val error: Boolean = false
+    val error: Boolean = false // this should be a class but for this sample should be enough
 ): ScreenState
 
 sealed class NoteListScreenEffects : Effect{

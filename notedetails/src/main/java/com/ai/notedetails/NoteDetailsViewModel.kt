@@ -19,7 +19,7 @@ constructor(
     private val dispatcherProvider: DispatcherProvider,
     private val getNoteById: GetNoteById,
     savedStateHandle: SavedStateHandle
-) : BaseViewModel<NoteDetailsScreenState, NoteDetailsScreenAction, NoteDetailsScreenEffect > () {
+) : BaseViewModel<NoteDetailsScreenState, NoteDetailsScreenActions, NoteDetailsScreenEffect > () {
 
 
     init {
@@ -32,11 +32,11 @@ constructor(
 
     override fun createInitialScreenSate(): NoteDetailsScreenState  = NoteDetailsScreenState()
 
-    override suspend fun handleActions(action: NoteDetailsScreenAction) {
+    override suspend fun handleActions(action: NoteDetailsScreenActions) {
         when(action) {
-            is NoteDetailsScreenAction.GetRelatedNoted -> {}
-            is NoteDetailsScreenAction.CreateNote -> {}
-            is NoteDetailsScreenAction.UpdateNote -> {}
+            is NoteDetailsScreenActions.GetRelatedNoted -> {}
+            is NoteDetailsScreenActions.CreateNote -> {}
+            is NoteDetailsScreenActions.UpdateNote -> {}
         }
     }
 
@@ -47,13 +47,14 @@ constructor(
 
 
 data class NoteDetailsScreenState(
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val error: Boolean = false // this should be a class but for this sample should be enough
 ): ScreenState
 
-sealed class NoteDetailsScreenAction : Action {
-    data class CreateNote(val note: NoteEntity) : NoteDetailsScreenAction()
-    data class UpdateNote(val note: NoteEntity) : NoteDetailsScreenAction()
-    object GetRelatedNoted : NoteDetailsScreenAction()
+sealed class NoteDetailsScreenActions : Action {
+    data class CreateNote(val note: NoteEntity) : NoteDetailsScreenActions()
+    data class UpdateNote(val note: NoteEntity) : NoteDetailsScreenActions()
+    object GetRelatedNoted : NoteDetailsScreenActions()
 }
 
 sealed class NoteDetailsScreenEffect : Effect {
