@@ -7,6 +7,7 @@ import com.ai.common.viewmodel.BaseViewModel
 import com.ai.common.viewmodel.Effect
 import com.ai.common.viewmodel.ScreenState
 import com.ai.common_android_data.DispatcherProvider
+import com.ai.common_domain.ResultWrapper
 import com.ai.common_domain.entities.NoteEntity
 import com.ai.common_domain.entities.NoteType
 import com.ai.common_domain.respository.NotesRepository
@@ -28,10 +29,20 @@ constructor(
     init {
         savedStateHandle.get<String>(NOTE_ID_KEY)?.let { noteId ->
             viewModelScope.launch(dispatcherProvider.io()) {
-                getNoteByIdUsaCase(noteId)
+                val result = getNoteByIdUsaCase(noteId)
+                if (result is ResultWrapper.Success) {
+                    setScreenState {
+                        copy(
+                            note = result.data,
+                            noteState = NoteState.EDIT
+                        )
+                    }
+                } else {
+                    setScreenState {
+                        copy(error = true)
+                    }
+                }
             }
-        } ?: setScreenState {
-            copy(noteState = NoteState.EDIT)
         }
     }
 
@@ -40,7 +51,6 @@ constructor(
     override suspend fun handleActions(action: NoteDetailsScreenActions) {
         when(action) {
             is NoteDetailsScreenActions.GetRelatedNoted -> {}
-            is NoteDetailsScreenActions.CreateNote -> insertNote(action.note)
             is NoteDetailsScreenActions.UpdateNote -> {}
             is NoteDetailsScreenActions.OnNameChanged -> {
                 setScreenState {
@@ -53,14 +63,32 @@ constructor(
                 }
             }
             is NoteDetailsScreenActions.OnTypeChanged -> {}
-            is NoteDetailsScreenActions.SaveNote -> {}
+            is NoteDetailsScreenActions.SaveNote -> {
+                val note = currentScreenState.note
+                if (currentScreenState.noteState == NoteState.INSERT) {
+                    insertNote(note)
+                } else {
+                    updateNote(note)
+                }
+            }
         }
     }
+
 
     private suspend fun insertNote(note: NoteEntity) {
         viewModelScope.launch(dispatcherProvider.io()) {
             //here we could/should add an use case for validating the info contained in the entity before creating new note for a production app
             repository.insertNote(note)
+            withContext(dispatcherProvider.ui()) {
+                setEffect { NoteDetailsScreenEffect.GoBack }
+            }
+        }
+    }
+
+    private suspend fun updateNote(note: NoteEntity) {
+        viewModelScope.launch(dispatcherProvider.io()) {
+            //here we could/should add an use case for validating the info contained in the entity before creating new note for a production app
+            repository.updateNote(note)
             withContext(dispatcherProvider.ui()) {
                 setEffect { NoteDetailsScreenEffect.GoBack }
             }
@@ -86,13 +114,12 @@ data class NoteDetailsScreenState(
 ): ScreenState
 
 sealed class NoteDetailsScreenActions : Action {
-    data class CreateNote(val note: NoteEntity) : NoteDetailsScreenActions()
+    object SaveNote: NoteDetailsScreenActions()
     data class UpdateNote(val note: NoteEntity) : NoteDetailsScreenActions()
     object GetRelatedNoted : NoteDetailsScreenActions()
     data class OnNameChanged(val name: String) : NoteDetailsScreenActions()
     data class OnDescriptionChanged(val description: String) : NoteDetailsScreenActions()
     data class OnTypeChanged(val type: NoteType) : NoteDetailsScreenActions()
-    object SaveNote: NoteDetailsScreenActions()
 }
 
 sealed class NoteDetailsScreenEffect : Effect {

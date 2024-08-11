@@ -70,7 +70,7 @@ private fun UiContent(
                 title = {
                     Text(
                         text = stringResource(
-                            id = if (state.noteState.name == NoteState.INSERT.name) R.string.edit_object else R.string.new_object
+                            id = if (state.noteState.name == NoteState.INSERT.name) R.string.new_object else R.string.edit_object
                         )
                     )
                         },

@@ -6,4 +6,5 @@ import com.ai.common_domain.entities.NoteEntity
 interface NotesRepository {
     suspend fun getAllNotes(): ResultWrapper<List<NoteEntity>>
     suspend fun insertNote(note: NoteEntity): ResultWrapper<Long>
+    suspend fun updateNote(note: NoteEntity): ResultWrapper<Int>
 }
