@@ -2,12 +2,18 @@ package com.ai.notedetails
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -26,6 +32,8 @@ import com.ai.common.components.NoteCard
 import com.ai.common.components.TopBar
 import com.ai.common.theme.TestAppTheme
 import com.ai.common.utils.HandleEffects
+import com.ai.common_domain.entities.NoteType
+import com.ai.notedetails.components.TextInputField
 
 
 @Composable
@@ -36,8 +44,10 @@ fun NoteDetailsScreen(
 
     val state by viewModel.screenState.collectAsState()
 
-    HandleEffects(effectFlow = viewModel.effect) {
-
+    HandleEffects(effectFlow = viewModel.effect) { effect ->
+        when(effect) {
+            NoteDetailsScreenEffect.GoBack -> navController.navigateUp()
+        }
     }
 
     Surface(
@@ -57,7 +67,13 @@ private fun UiContent(
     Scaffold(
         topBar = {
             TopBar(
-                title = { Text(text = stringResource(id = R.string.edit_object)) },
+                title = {
+                    Text(
+                        text = stringResource(
+                            id = if (state.noteState.name == NoteState.INSERT.name) R.string.edit_object else R.string.new_object
+                        )
+                    )
+                        },
                 actions = { }
             )
         }
@@ -82,37 +98,58 @@ private fun ValidContent(
     action: (NoteDetailsScreenActions) -> Unit
 ) {
 
-    Column(modifier = modifier.fillMaxSize()) {
-        NoteCard(
-            title = stringResource(id = R.string.object_name),
-            description = state.note.name
-        ) {}
-        Spacer(modifier = modifier.height(8.dp))
-        NoteCard(
-            title = stringResource(id = R.string.object_description),
-            description = state.note.description
-        ) {}
-        Spacer(modifier = modifier.height(8.dp))
-        NoteCard(
-            title = stringResource(id = R.string.object_type),
-            description = state.note.type.name
-        ) {}
-        Spacer(modifier = modifier.height(8.dp))
-    }
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(end = 8.dp, bottom = 8.dp)
+    ) {
+        Column( modifier = Modifier.padding(top = 8.dp)) {
+            TextInputField(
+                header = stringResource(id = R.string.object_name),
+                value = state.note.name,
+                onValueChange = { action(NoteDetailsScreenActions.OnNameChanged(it)) }
+            )
+            TextInputField(
+                header = stringResource(id = R.string.object_description),
+                value = state.note.description,
+                onValueChange = { action(NoteDetailsScreenActions.OnDescriptionChanged(it)) }
+            )
+            TextInputField(
+                header = stringResource(id = R.string.object_type),
+                value = if (state.note.type == NoteType.IDLE) "" else state.note.type.name,
+                onValueChange = { }
+            )
 
-    /*
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-                // for related notes
-                /* items(state.notes) { note ->
-                     NoteCard(
-                         title = note.title,
-                         description = note.description
-                     ) {
-                         action(NoteListScreenActions.OnNoteSelectedClick(note))
-                     }
-                 }*/
+        }
+
+        LazyColumn(modifier = Modifier.wrapContentSize()) {
+            // for related notes
+            /* items(state.notes) { note ->
+                 NoteCard(
+                     title = note.title,
+                     description = note.description
+                 ) {
+                     action(NoteListScreenActions.OnNoteSelectedClick(note))
+                 }
+             }*/
+        }
     }
-     */
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(end = 8.dp, bottom = 8.dp),
+        contentAlignment = Alignment.BottomEnd
+    ) {
+        Button(
+            modifier = Modifier
+                .width(55.dp)
+                .height(55.dp),
+            onClick = { action(NoteDetailsScreenActions.SaveNote) },
+            shape = CircleShape,
+        ) {
+            Icon(Icons.Filled.Add, null)
+        }
+    }
 
 }
 

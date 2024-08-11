@@ -1,8 +1,6 @@
 package com.ai.notelist
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -95,7 +93,7 @@ private fun ValidContent(
     state: NoteListScreenState,
     action: (NoteListScreenActions) -> Unit
 ) {
-    /*Box(modifier = modifier.fillMaxSize()) {
+    Box(modifier = modifier.fillMaxSize()) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(state.notes) { note ->
                 NoteCard(
@@ -106,7 +104,7 @@ private fun ValidContent(
                 }
             }
         }
-    }*/
+    }
 
     Box(
         modifier = modifier

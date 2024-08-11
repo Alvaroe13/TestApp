@@ -8,6 +8,7 @@ import com.ai.common.viewmodel.Effect
 import com.ai.common.viewmodel.ScreenState
 import com.ai.common_android_data.DispatcherProvider
 import com.ai.common_domain.entities.NoteEntity
+import com.ai.common_domain.entities.NoteType
 import com.ai.common_domain.respository.NotesRepository
 import com.ai.common_domain.usecase.GetNoteByIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -41,6 +42,18 @@ constructor(
             is NoteDetailsScreenActions.GetRelatedNoted -> {}
             is NoteDetailsScreenActions.CreateNote -> insertNote(action.note)
             is NoteDetailsScreenActions.UpdateNote -> {}
+            is NoteDetailsScreenActions.OnNameChanged -> {
+                setScreenState {
+                    copy(note = currentScreenState.note.copy(name = action.name))
+                }
+            }
+            is NoteDetailsScreenActions.OnDescriptionChanged -> {
+                setScreenState {
+                    copy(note = currentScreenState.note.copy(description = action.description))
+                }
+            }
+            is NoteDetailsScreenActions.OnTypeChanged -> {}
+            is NoteDetailsScreenActions.SaveNote -> {}
         }
     }
 
@@ -76,6 +89,10 @@ sealed class NoteDetailsScreenActions : Action {
     data class CreateNote(val note: NoteEntity) : NoteDetailsScreenActions()
     data class UpdateNote(val note: NoteEntity) : NoteDetailsScreenActions()
     object GetRelatedNoted : NoteDetailsScreenActions()
+    data class OnNameChanged(val name: String) : NoteDetailsScreenActions()
+    data class OnDescriptionChanged(val description: String) : NoteDetailsScreenActions()
+    data class OnTypeChanged(val type: NoteType) : NoteDetailsScreenActions()
+    object SaveNote: NoteDetailsScreenActions()
 }
 
 sealed class NoteDetailsScreenEffect : Effect {
