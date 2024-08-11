@@ -48,6 +48,9 @@ fun NoteListScreen(
             is NoteListScreenEffects.CreateNewNoteClicked -> {
                 navController.navigate(ScreenDestinations.NoteDetailsScreen.route)
             }
+            is NoteListScreenEffects.NoteSelected -> {
+                navController.navigate("${ScreenDestinations.NoteDetailsScreen.route}?noteId=${effect.noteId}")
+            }
         }
     }
 

@@ -8,6 +8,11 @@ dependencies {
     implementation libs.ui.tooling.preview
     implementation libs.material3
 
+    // Arch components
+    implementation libs.androidx.activity
+    implementation libs.androidx.lifecycle
+    implementation libs.androidx.process.lifecycle
+
     //Dagger
     implementation libs.dagger
     implementation libs.dagger.navigation

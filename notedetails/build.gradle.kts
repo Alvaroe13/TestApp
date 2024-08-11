@@ -13,5 +13,5 @@ android.namespace = "com.ai.notedetails"
 
 dependencies {
     implementation(project(":common"))
-    implementation(project(":common-domain"))
+    implementation(project(":common-android-data"))
 }

@@ -41,7 +41,7 @@ class NoteListViewModel @Inject constructor(
 
     override suspend fun handleActions(action: NoteListScreenActions) {
        when(action) {
-           is NoteListScreenActions.OnNoteSelectedClick ->  {} // load
+           is NoteListScreenActions.OnNoteSelectedClick ->  setEffect { NoteListScreenEffects.NoteSelected(action.note.id) }
            is NoteListScreenActions.OnNewNoteClick -> setEffect { NoteListScreenEffects.CreateNewNoteClicked }
            else -> {}
        }
@@ -56,6 +56,7 @@ data class NoteListScreenState(
 
 sealed class NoteListScreenEffects : Effect{
     object CreateNewNoteClicked : NoteListScreenEffects()
+    data class NoteSelected(val noteId: Int) : NoteListScreenEffects()
 }
 
 sealed class NoteListScreenActions : Action {

@@ -11,9 +11,13 @@ class NotesRepositoryImpl @Inject constructor(
     private val notesDao: NotesDao,
     private val noteMapper: NoteMapper
 ): NotesRepository {
+
+    private var notesCache: List<NoteEntity>? = null
     override suspend fun getAllNotes(): ResultWrapper<List<NoteEntity>> {
         return safeCall {
-            notesDao.getAllNotes().map { noteMapper.mapTo(it) }
+            notesDao.getAllNotes().map { noteMapper.mapTo(it) }.also {
+                notesCache = it
+            }
         }
     }
 
