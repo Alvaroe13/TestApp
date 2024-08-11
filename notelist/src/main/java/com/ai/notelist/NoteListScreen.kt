@@ -95,49 +95,74 @@ private fun ValidContent(
     state: NoteListScreenState,
     action: (NoteListScreenActions) -> Unit
 ) {
-    Box(modifier = modifier.fillMaxSize()) {
+    /*Box(modifier = modifier.fillMaxSize()) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(state.notes) { note ->
                 NoteCard(
-                    title = note.title,
+                    title = note.name,
                     description = note.description
                 ) {
                     action(NoteListScreenActions.OnNoteSelectedClick(note))
                 }
             }
         }
-    }
+    }*/
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(end = 8.dp, bottom = 8.dp),
+        contentAlignment = Alignment.BottomEnd
+    ) {
+        Button(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(end = 8.dp, bottom = 8.dp),
-            horizontalAlignment = Alignment.End,
-            verticalArrangement = Arrangement.Bottom
+                .width(55.dp)
+                .height(55.dp),
+            onClick = { action(NoteListScreenActions.OnNewNoteClick) },
+            shape = CircleShape,
         ) {
-            Button(
-                modifier = Modifier
-                    .width(55.dp)
-                    .height(55.dp),
-                onClick = { action(NoteListScreenActions.OnNewNoteClick) },
-                shape = CircleShape,
-            ) {
-                Icon(Icons.Filled.Add, null)
-            }
+            Icon(Icons.Filled.Add, null)
         }
     }
 }
 
 @Composable
 fun LoadingContent(modifier : Modifier = Modifier) {
-    //Could be a generic one
+    //Could be a proper and generic screen
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(text = "Loading")
+    }
 }
 
 
 @Composable
 fun ErrorContent(modifier : Modifier = Modifier) {
-    //Could be a generic one
+    //Could be a proper and generic screen
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(text = "Error")
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun NoteListScreenLoadinPreview() {
+    TestAppTheme {
+        LoadingContent()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun NoteListScreenErrorPreview() {
+    TestAppTheme {
+        ErrorContent()
+    }
 }
 
 @Preview(showBackground = true)
@@ -153,28 +178,28 @@ private fun mockNotes(): List<NoteEntity> =
         add(
             NoteEntity(
                 id = 1,
-                title = "This is the title",
+                name = "This is the title",
                 description = "This is a description"
             )
         )
         add(
             NoteEntity(
                 id = 1,
-                title = "This is the title",
+                name = "This is the title",
                 description = "This is a description"
             )
         )
         add(
             NoteEntity(
                 id = 1,
-                title = "This is the title",
+                name = "This is the title",
                 description = "This is a description"
             )
         )
         add(
             NoteEntity(
                 id = 1,
-                title = "This is the title",
+                name = "This is the title",
                 description = "This is a description"
             )
         )

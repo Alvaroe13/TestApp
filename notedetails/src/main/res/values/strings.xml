@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="edit_object">Edit object</string>
-    <string name="New_object">New object</string>
+    <string name="new_object">New object</string>
+
+    <string name="object_type">Type</string>
+    <string name="object_name">Name</string>
+    <string name="object_description">Description</string>
 </resources>

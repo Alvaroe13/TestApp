@@ -41,7 +41,9 @@ class NoteListViewModel @Inject constructor(
 
     override suspend fun handleActions(action: NoteListScreenActions) {
        when(action) {
-           is NoteListScreenActions.OnNoteSelectedClick ->  setEffect { NoteListScreenEffects.NoteSelected(action.note.id) }
+           is NoteListScreenActions.OnNoteSelectedClick ->  setEffect {
+               NoteListScreenEffects.NoteSelected(action.note.id ?: throw IllegalArgumentException("this id cannot be null") )
+           }
            is NoteListScreenActions.OnNewNoteClick -> setEffect { NoteListScreenEffects.CreateNewNoteClicked }
            else -> {}
        }
