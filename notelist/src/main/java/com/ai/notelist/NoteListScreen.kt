@@ -1,6 +1,8 @@
 package com.ai.notelist
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ai.common.components.NoteCard
+import com.ai.common.components.NoteCardInputField
 import com.ai.common.components.TopBar
 import com.ai.common.navigation.ArgumentKeyConstants.NOTE_ID_KEY
 import com.ai.common.navigation.ArgumentKeyConstants.REFRESH_KEY
@@ -110,14 +113,28 @@ private fun ValidContent(
             .fillMaxSize()
             .padding(8.dp)
     ) {
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(state.notes) { note ->
-                NoteCard(
-                    title = note.name,
-                    description = note.description,
-                    onNoteTapped = { action(NoteListScreenActions.OnNoteSelectedClick(note)) },
-                    onLongPressed = { action(NoteListScreenActions.OnNoteLongPressed(note) ) }
-                )
+        Column {
+            Text(
+                text = stringResource(id = R.string.search_bar_placeholder),
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.primary,
+            )
+            NoteCardInputField(
+                header = "",
+                value = state.searchQuery ?: "",
+                onValueChange = { action(NoteListScreenActions.OnSearchQueryChanged(it)) }
+            )
+            Spacer(modifier = Modifier.height(30.dp))
+
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                items(state.notes) { note ->
+                    NoteCard(
+                        title = note.name,
+                        description = note.description,
+                        onNoteTapped = { action(NoteListScreenActions.OnNoteSelectedClick(note)) },
+                        onLongPressed = { action(NoteListScreenActions.OnNoteLongPressed(note) ) }
+                    )
+                }
             }
         }
     }
@@ -172,22 +189,6 @@ fun ErrorContent(modifier : Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-private fun NoteListScreenLoadingPreview() {
-    TestAppTheme {
-        LoadingContent()
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun NoteListScreenErrorPreview() {
-    TestAppTheme {
-        ErrorContent()
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
 private fun NoteListScreenPreview() {
     TestAppTheme {
         ValidContent(state = NoteListScreenState(notes = mockNotes()), action =  {} )
@@ -225,3 +226,19 @@ private fun mockNotes(): List<NoteEntity> =
             )
         )
     }
+
+@Preview(showBackground = true)
+@Composable
+private fun NoteListScreenLoadingPreview() {
+    TestAppTheme {
+        LoadingContent()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun NoteListScreenErrorPreview() {
+    TestAppTheme {
+        ErrorContent()
+    }
+}

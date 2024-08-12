@@ -71,6 +71,11 @@ class NoteListViewModel @Inject constructor(
                    copy(showDeleteOption = false)
                }
            }
+           is NoteListScreenActions.OnSearchQueryChanged -> {
+               setScreenState {
+                   copy(searchQuery = action.query)
+               }
+           }
        }
     }
 
@@ -97,6 +102,7 @@ data class NoteListScreenState(
     val notes: List<NoteEntity> = emptyList(),
     val showDeleteOption: Boolean = false,
     val noteForDeletion: NoteEntity? = null,
+    var searchQuery: String? = null,
     val error: Boolean = false // this should be a class but for this sample should be enough
 ): ScreenState
 
@@ -113,4 +119,5 @@ sealed class NoteListScreenActions : Action {
     data class OnNoteDeletionConfirmed(val note: NoteEntity) : NoteListScreenActions()
     object OnNoteDeletionCancelled : NoteListScreenActions()
     data class OnNoteSelectedClick(val note: NoteEntity) : NoteListScreenActions()
+    data class OnSearchQueryChanged(val query: String) : NoteListScreenActions()
 }

@@ -6,4 +6,5 @@
     <string name="deletion_title">Delete note</string>
     <string name="deletion_description">Are you sure you want to delete this note?</string>
 
+    <string name="search_bar_placeholder">Search</string>
 </resources>

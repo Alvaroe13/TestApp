@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ai.common.components.NoteCard
+import com.ai.common.components.NoteCardInputField
 import com.ai.common.components.TopBar
 import com.ai.common.navigation.ArgumentKeyConstants.NOTE_ID_KEY
 import com.ai.common.navigation.ArgumentKeyConstants.REFRESH_KEY
@@ -38,7 +39,6 @@ import com.ai.common.theme.TestAppTheme
 import com.ai.common.utils.HandleEffects
 import com.ai.common_domain.entities.NoteEntity
 import com.ai.notedetails.components.Dropdown
-import com.ai.notedetails.components.TextInputField
 
 
 @Composable
@@ -117,12 +117,12 @@ private fun ValidContent(
             .padding(8.dp)
     ) {
         Column {
-            TextInputField(
+            NoteCardInputField(
                 header = stringResource(id = R.string.object_name),
                 value = state.note.name,
                 onValueChange = { action(NoteDetailsScreenActions.OnNameChanged(it)) }
             )
-            TextInputField(
+            NoteCardInputField(
                 header = stringResource(id = R.string.object_description),
                 value = state.note.description,
                 onValueChange = { action(NoteDetailsScreenActions.OnDescriptionChanged(it)) }

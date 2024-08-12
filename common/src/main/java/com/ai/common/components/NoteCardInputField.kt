@@ -1,4 +1,4 @@
-package com.ai.notedetails.components
+package com.ai.common.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,7 +17,7 @@ import com.ai.common.theme.TestAppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TextInputField(
+fun NoteCardInputField(
     modifier: Modifier = Modifier,
     header: String,
     value: String,
@@ -54,9 +54,20 @@ fun TextInputField(
 @Composable
 fun TextInputFieldPreview(){
     TestAppTheme {
-        TextInputField(
+        NoteCardInputField(
             header = "Type",
             value ="Title"
+        ) {}
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TextInputFieldNoHeaderPreview(){
+    TestAppTheme {
+        NoteCardInputField(
+            header = "",
+            value = "Description",
         ) {}
     }
 }
