@@ -32,6 +32,9 @@ constructor(
 
     init {
         savedStateHandle.get<String>(NOTE_ID_KEY)?.let { noteId ->
+            setScreenState {
+                copy(noteState = NoteState.EDIT)
+            }
             getNote(noteId)
         }
     }
@@ -44,7 +47,7 @@ constructor(
                 getNoteByIdUsaCase(action.noteId)
                     .onSuccess { note ->
                         setScreenState {
-                            copy(note = note, noteState = NoteState.EDIT)
+                            copy(note = note)
                         }
                         viewModelScope.launch(dispatcherProvider.ui()) {
                             getRelatedNotes(note)
@@ -93,7 +96,8 @@ constructor(
                 }
             }
             is NoteDetailsScreenActions.OnRelatedNoteSelected -> {
-                getNote(action.note.id.toString())
+                println("NoteTAG VM id ${action.noteId}")
+                getNote(action.noteId.toString())
             }
         }
     }
@@ -136,7 +140,7 @@ data class NoteDetailsScreenState(
     val note: NoteEntity = NoteEntity(),
     val noteState: NoteState = NoteState.INSERT,
     val relatedNotes: List<NoteEntity> = emptyList(),
-    var showOptions: Boolean = false,
+    val showOptions: Boolean = false,
     val error: Boolean = false // this should be a class exposing the error with message but for this sample should be enough
 ): ScreenState
 
@@ -148,7 +152,7 @@ sealed class NoteDetailsScreenActions : Action {
     data class OnDescriptionChanged(val description: String) : NoteDetailsScreenActions()
     data class OnTypeChanged(val show: Boolean) : NoteDetailsScreenActions()
     data class OnTypeSelected(val noteObject: NoteObject) : NoteDetailsScreenActions()
-    data class OnRelatedNoteSelected(val note: NoteEntity) : NoteDetailsScreenActions()
+    data class OnRelatedNoteSelected(val noteId: Int) : NoteDetailsScreenActions()
 }
 
 sealed class NoteDetailsScreenEffect : Effect {

@@ -1,6 +1,6 @@
 package com.ai.common.components
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -9,20 +9,28 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ai.common.theme.TestAppTheme
 
 @Composable
 fun NoteCard(
+    id: Int? = null,
     title: String,
     description: String,
-    onNoteTapped: () -> Unit = {}
+    onNoteTapped: (id: Int?) -> Unit = {},
+    onLongPressed: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
             .padding(8.dp)
-            .clickable { onNoteTapped() }
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onTap =  { onNoteTapped(id) },
+                    onLongPress = { onLongPressed() }
+                )
+            }
     ) {
         Card(
             modifier = Modifier
@@ -55,6 +63,7 @@ fun NoteCard(
 fun NoteCardPreview() {
     TestAppTheme {
         NoteCard(
+            id = 1,
             title = "This is the title",
             description = "This is the description"
         ) {

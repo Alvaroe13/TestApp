@@ -13,7 +13,6 @@ class NoteMapper @Inject constructor() {
             name = noteDto.name,
             description = noteDto.descrption,
             type = noteDto.type,
-            //typeName = noteDto.typeName
         )
     }
 
@@ -22,8 +21,7 @@ class NoteMapper @Inject constructor() {
             id = noteEntity.id ?: Random.nextInt(), // we could/should apply a better logic for a real production app but for this sample it gets the job done
             name = noteEntity.name,
             descrption = noteEntity.description,
-            type = noteEntity.type,
-            //typeName = noteEntity.typeName
+            type = noteEntity.type
         )
     }
 }

@@ -12,11 +12,14 @@ class NotesRepositoryImpl @Inject constructor(
     private val noteMapper: NoteMapper
 ): NotesRepository {
 
-    private var notesCache: List<NoteEntity>? = null
+    private var notesCache: MutableList<NoteEntity>? = null
     override suspend fun getAllNotes(): ResultWrapper<List<NoteEntity>> {
         return safeCall {
             notesDao.getAllNotes().map { noteMapper.mapTo(it) }.also {
-                notesCache = it
+                if (notesCache== null) {
+                    notesCache = mutableListOf()
+                }
+                notesCache?.addAll(it)
             }
         }
     }
@@ -30,6 +33,13 @@ class NotesRepositoryImpl @Inject constructor(
     override suspend fun updateNote(note: NoteEntity): ResultWrapper<Int> {
         return safeCall {
             notesDao.updateNote(noteMapper.mapFrom(note))
+        }
+    }
+
+    override suspend fun deleteNote(note: NoteEntity): ResultWrapper<Int> {
+        return safeCall {
+            notesCache?.remove(checkNotNull(notesCache?.find { it.id == note.id }))
+            notesDao.deleteNote(noteMapper.mapFrom(note))
         }
     }
 

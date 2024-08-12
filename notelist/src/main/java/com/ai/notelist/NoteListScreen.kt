@@ -1,6 +1,5 @@
 package com.ai.notelist
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -35,6 +34,7 @@ import com.ai.common.navigation.ScreenDestinations
 import com.ai.common.theme.TestAppTheme
 import com.ai.common.utils.HandleEffects
 import com.ai.common_domain.entities.NoteEntity
+import com.ai.notelist.components.DeletionDialog
 
 @Composable
 fun NoteListScreen(
@@ -109,13 +109,21 @@ private fun ValidContent(
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(state.notes) { note ->
                 NoteCard(
+                    id = checkNotNull(note.id),
                     title = note.name,
-                    description = note.description
-                ) {
-                    action(NoteListScreenActions.OnNoteSelectedClick(note))
-                }
+                    description = note.description,
+                    onNoteTapped = { action(NoteListScreenActions.OnNoteSelectedClick(note)) },
+                    onLongPressed = { action(NoteListScreenActions.OnNoteLongPressed(note) ) }
+                )
             }
         }
+    }
+
+    if (state.showDeleteOption) {
+        DeletionDialog(
+            onConfirm = { action(NoteListScreenActions.OnNoteDeletionConfirmed( checkNotNull(state.noteForDeletion) )) },
+            onCancel = { action(NoteListScreenActions.OnNoteDeletionCancelled) }
+        )
     }
 
     Box(
@@ -161,7 +169,7 @@ fun ErrorContent(modifier : Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-private fun NoteListScreenLoadinPreview() {
+private fun NoteListScreenLoadingPreview() {
     TestAppTheme {
         LoadingContent()
     }

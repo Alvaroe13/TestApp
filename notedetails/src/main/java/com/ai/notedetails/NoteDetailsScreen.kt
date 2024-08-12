@@ -61,12 +61,7 @@ fun NoteDetailsScreen(
         }
     }
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
-    ) {
-        UiContent(state = state, action = viewModel::setAction)
-    }
+    UiContent(state = state, action = viewModel::setAction)
 }
 
 @Composable
@@ -75,30 +70,37 @@ private fun UiContent(
     state: NoteDetailsScreenState,
     action: (action: NoteDetailsScreenActions) -> Unit
 ) {
-    Scaffold(
-        topBar = {
-            TopBar(
-                title = {
-                    Text(
-                        text = stringResource(
-                            id = if (state.noteState.name == NoteState.INSERT.name) R.string.new_object else R.string.edit_object
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+
+        Scaffold(
+            topBar = {
+                TopBar(
+                    title = {
+                        Text(
+                            text = stringResource(
+                                id = if (state.noteState.name == NoteState.INSERT.name) R.string.new_object else R.string.edit_object
+                            )
                         )
-                    )
-                        },
-                actions = { }
-            )
+                    },
+                    actions = { }
+                )
+            }
+        ) { paddingValues ->
+            if (state.error) {
+                ErrorContent(modifier.padding(paddingValues))
+            } else {
+                if (state.isLoading) LoadingContent(modifier.padding(paddingValues))
+                else ValidContent(
+                    modifier = modifier.padding(paddingValues),
+                    state = state,
+                    action = action
+                )
+            }
         }
-    ) { paddingValues ->
-        if (state.error) {
-            ErrorContent(modifier.padding(paddingValues))
-        } else {
-            if (state.isLoading) LoadingContent(modifier.padding(paddingValues))
-            else ValidContent(
-                modifier = modifier.padding(paddingValues),
-                state = state,
-                action = action
-            )
-        }
+
     }
 }
 
@@ -147,12 +149,15 @@ private fun ValidContent(
 
                 LazyColumn(modifier = Modifier.wrapContentSize()) {
                     items(state.relatedNotes) { note ->
+                        println("NoteTAG composable id ${note.id}")
                         NoteCard(
+                            id = checkNotNull(note.id) ,
                             title = note.name,
-                            description = note.description
-                        ) {
-                            action(NoteDetailsScreenActions.OnRelatedNoteSelected(note))
-                        }
+                            description = note.description,
+                            onNoteTapped = {
+                                action(NoteDetailsScreenActions.OnRelatedNoteSelected(checkNotNull(it)))
+                            }
+                        )
                     }
                 }
             }

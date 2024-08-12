@@ -32,11 +32,45 @@ class NoteListViewModel @Inject constructor(
            is NoteListScreenActions.LoadNotes -> loadNotes()
 
            is NoteListScreenActions.OnNoteSelectedClick ->  setEffect {
-               NoteListScreenEffects.NoteSelected(action.note.id ?: throw IllegalArgumentException("this id cannot be null") )
+               NoteListScreenEffects.NoteSelected(checkNotNull(action.note.id) )
            }
 
            is NoteListScreenActions.OnNewNoteClick -> setEffect { NoteListScreenEffects.CreateNewNoteClicked }
-           else -> {}
+
+           is NoteListScreenActions.OnNoteLongPressed -> {
+               setScreenState {
+                    copy(
+                        showDeleteOption = true,
+                        noteForDeletion = action.note
+                    )
+               }
+           }
+
+           is NoteListScreenActions.OnNoteDeletionConfirmed -> {
+               setScreenState {
+                   copy(showDeleteOption = false)
+               }
+               viewModelScope.launch(dispatcherProvider.io()) {
+                   notesRepository.deleteNote(action.note)
+                       .onSuccess {
+                           setScreenState {
+                               copy(
+                                   noteForDeletion = null
+                               )
+                           }
+                           loadNotes()
+                       }
+                       .onError {
+                           // show error message
+                       }
+               }
+           }
+
+           is NoteListScreenActions.OnNoteDeletionCancelled -> {
+               setScreenState {
+                   copy(showDeleteOption = false)
+               }
+           }
        }
     }
 
@@ -61,6 +95,8 @@ class NoteListViewModel @Inject constructor(
 data class NoteListScreenState(
     val isLoading: Boolean = false,
     val notes: List<NoteEntity> = emptyList(),
+    val showDeleteOption: Boolean = false,
+    val noteForDeletion: NoteEntity? = null,
     val error: Boolean = false // this should be a class but for this sample should be enough
 ): ScreenState
 
@@ -73,5 +109,8 @@ sealed class NoteListScreenActions : Action {
 
     object LoadNotes: NoteListScreenActions()
     object OnNewNoteClick : NoteListScreenActions()
+    data class OnNoteLongPressed(val note: NoteEntity) : NoteListScreenActions()
+    data class OnNoteDeletionConfirmed(val note: NoteEntity) : NoteListScreenActions()
+    object OnNoteDeletionCancelled : NoteListScreenActions()
     data class OnNoteSelectedClick(val note: NoteEntity) : NoteListScreenActions()
 }

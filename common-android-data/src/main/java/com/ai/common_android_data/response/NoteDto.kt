@@ -12,6 +12,5 @@ data class NoteDto(
     var id: Int,
     var name: String = "",
     var descrption: String = "",
-    var type: NoteObject = Human(),
-    //var typeName: String = type.name
+    var type: NoteObject = Human()
 )
