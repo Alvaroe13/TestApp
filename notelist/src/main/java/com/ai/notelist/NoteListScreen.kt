@@ -109,7 +109,6 @@ private fun ValidContent(
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(state.notes) { note ->
                 NoteCard(
-                    id = checkNotNull(note.id),
                     title = note.name,
                     description = note.description,
                     onNoteTapped = { action(NoteListScreenActions.OnNoteSelectedClick(note)) },

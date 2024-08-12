@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.ai.common_android_data.DispatcherProvider
 import com.ai.common_android_data.DispatcherProviderImpl
-import com.ai.common_android_data.NotesRepositoryImpl
+import com.ai.common_android_data.repository.NotesRepositoryImpl
 import com.ai.common_android_data.datasource.NotesDao
 import com.ai.common_android_data.datasource.NotesDatabase
 import com.ai.common_domain.respository.NotesRepository

@@ -1,7 +1,8 @@
-package com.ai.common_android_data
+package com.ai.common_android_data.repository
 
 import com.ai.common_android_data.datasource.NotesDao
 import com.ai.common_android_data.mapper.NoteMapper
+import com.ai.common_android_data.utils.safeCall
 import com.ai.common_domain.ResultWrapper
 import com.ai.common_domain.entities.NoteEntity
 import com.ai.common_domain.respository.NotesRepository
@@ -12,20 +13,27 @@ class NotesRepositoryImpl @Inject constructor(
     private val noteMapper: NoteMapper
 ): NotesRepository {
 
-    private var notesCache: MutableList<NoteEntity>? = null
+    private var notesCache: MutableSet<NoteEntity>? = null
     override suspend fun getAllNotes(): ResultWrapper<List<NoteEntity>> {
-        return safeCall {
-            notesDao.getAllNotes().map { noteMapper.mapTo(it) }.also {
-                if (notesCache== null) {
-                    notesCache = mutableListOf()
+        return if (notesCache != null) {
+            safeCall {
+                notesCache!!.toList()
+            }
+        } else {
+            safeCall {
+                notesDao.getAllNotes().map { noteMapper.mapTo(it) }.also {
+                    if (notesCache == null) {
+                        notesCache = mutableSetOf()
+                    }
+                    notesCache?.addAll(it)
                 }
-                notesCache?.addAll(it)
             }
         }
     }
 
     override suspend fun insertNote(note: NoteEntity): ResultWrapper<Long> {
         return safeCall {
+            notesCache?.add(note)
             notesDao.insertNote( noteMapper.mapFrom(note) )
         }
     }
@@ -38,7 +46,7 @@ class NotesRepositoryImpl @Inject constructor(
 
     override suspend fun deleteNote(note: NoteEntity): ResultWrapper<Int> {
         return safeCall {
-            notesCache?.remove(checkNotNull(notesCache?.find { it.id == note.id }))
+            notesCache?.removeIf { note.id == it.id }
             notesDao.deleteNote(noteMapper.mapFrom(note))
         }
     }

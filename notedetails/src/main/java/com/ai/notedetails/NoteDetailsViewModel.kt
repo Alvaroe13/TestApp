@@ -47,13 +47,13 @@ constructor(
                 getNoteByIdUsaCase(action.noteId)
                     .onSuccess { note ->
                         setScreenState {
-                            copy(note = note)
+                            currentScreenState.copy(note = note)
                         }
                         viewModelScope.launch(dispatcherProvider.ui()) {
                             getRelatedNotes(note)
-                                .onSuccess { relatedNotes->
+                                .onSuccess { relatedNotes ->
                                     setScreenState {
-                                        copy(relatedNotes = relatedNotes)
+                                        currentScreenState.copy(relatedNotes = relatedNotes)
                                     }
                                 }
                         }
@@ -96,7 +96,6 @@ constructor(
                 }
             }
             is NoteDetailsScreenActions.OnRelatedNoteSelected -> {
-                println("NoteTAG VM id ${action.noteId}")
                 getNote(action.noteId.toString())
             }
         }

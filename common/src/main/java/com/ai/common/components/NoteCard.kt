@@ -16,10 +16,9 @@ import com.ai.common.theme.TestAppTheme
 
 @Composable
 fun NoteCard(
-    id: Int? = null,
     title: String,
     description: String,
-    onNoteTapped: (id: Int?) -> Unit = {},
+    onNoteTapped: () -> Unit = {},
     onLongPressed: () -> Unit = {}
 ) {
     Column(
@@ -27,7 +26,7 @@ fun NoteCard(
             .padding(8.dp)
             .pointerInput(Unit) {
                 detectTapGestures(
-                    onTap =  { onNoteTapped(id) },
+                    onTap =  { onNoteTapped() },
                     onLongPress = { onLongPressed() }
                 )
             }
@@ -63,7 +62,6 @@ fun NoteCard(
 fun NoteCardPreview() {
     TestAppTheme {
         NoteCard(
-            id = 1,
             title = "This is the title",
             description = "This is the description"
         ) {

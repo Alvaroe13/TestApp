@@ -1,4 +1,4 @@
-package com.ai.common_android_data
+package com.ai.common_android_data.utils
 
 import com.ai.common_domain.ResultWrapper
 import com.ai.common_domain.ResultWrapperError

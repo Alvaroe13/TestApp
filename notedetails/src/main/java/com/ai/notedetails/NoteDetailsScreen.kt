@@ -149,13 +149,11 @@ private fun ValidContent(
 
                 LazyColumn(modifier = Modifier.wrapContentSize()) {
                     items(state.relatedNotes) { note ->
-                        println("NoteTAG composable id ${note.id}")
                         NoteCard(
-                            id = checkNotNull(note.id) ,
                             title = note.name,
                             description = note.description,
                             onNoteTapped = {
-                                action(NoteDetailsScreenActions.OnRelatedNoteSelected(checkNotNull(it)))
+                                action(NoteDetailsScreenActions.OnRelatedNoteSelected(checkNotNull(note.id)))
                             }
                         )
                     }
