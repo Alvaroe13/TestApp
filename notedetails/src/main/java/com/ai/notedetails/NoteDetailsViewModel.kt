@@ -8,9 +8,10 @@ import com.ai.common.viewmodel.BaseViewModel
 import com.ai.common.viewmodel.Effect
 import com.ai.common.viewmodel.ScreenState
 import com.ai.common_android_data.DispatcherProvider
-import com.ai.common_domain.ResultWrapper
 import com.ai.common_domain.entities.NoteEntity
 import com.ai.common_domain.entities.NoteObject
+import com.ai.common_domain.extentions.onError
+import com.ai.common_domain.extentions.onSuccess
 import com.ai.common_domain.respository.NotesRepository
 import com.ai.common_domain.usecase.GetNoteByIdUseCase
 import com.ai.common_domain.usecase.GetRelatedNotes
@@ -31,24 +32,8 @@ constructor(
 
     init {
         savedStateHandle.get<String>(NOTE_ID_KEY)?.let { noteId ->
-            viewModelScope.launch(dispatcherProvider.io()) {
-                val result = getNoteByIdUsaCase(noteId)
-                if (result is ResultWrapper.Success) {
-                    setScreenState {
-                        copy(note = result.data, noteState = NoteState.EDIT)
-                    }
-
-                    val relatedNotes = getRelatedNotes(result.data)
-                    if (relatedNotes is ResultWrapper.Success) {
-                        setScreenState {
-                            copy(relatedNotes = relatedNotes.data)
-                        }
-                    }
-                } else {
-                    setScreenState {
-                        copy(error = true)
-                    }
-                }
+            viewModelScope.launch(dispatcherProvider.ui()) {
+                handleActions( NoteDetailsScreenActions.GetNoteAndRelated(noteId) )
             }
         }
     }
@@ -57,7 +42,27 @@ constructor(
 
     override suspend fun handleActions(action: NoteDetailsScreenActions) {
         when(action) {
-            is NoteDetailsScreenActions.GetRelatedNoted -> {}
+            is NoteDetailsScreenActions.GetNoteAndRelated -> {
+                getNoteByIdUsaCase(action.noteId)
+                    .onSuccess { note ->
+                        setScreenState {
+                            copy(note = note, noteState = NoteState.EDIT)
+                        }
+                        viewModelScope.launch(dispatcherProvider.ui()) {
+                            getRelatedNotes(note)
+                                .onSuccess { relatedNotes->
+                                    setScreenState {
+                                        copy(relatedNotes = relatedNotes)
+                                    }
+                                }
+                        }
+                    }
+                    .onError {
+                        setScreenState {
+                            copy(error = true)
+                        }
+                    }
+            }
             is NoteDetailsScreenActions.UpdateNote -> {}
             is NoteDetailsScreenActions.OnNameChanged -> {
                 setScreenState {
@@ -121,7 +126,7 @@ data class NoteDetailsScreenState(
 sealed class NoteDetailsScreenActions : Action {
     object SaveNote: NoteDetailsScreenActions()
     data class UpdateNote(val note: NoteEntity) : NoteDetailsScreenActions()
-    object GetRelatedNoted : NoteDetailsScreenActions()
+    data class GetNoteAndRelated(val noteId: String) : NoteDetailsScreenActions()
     data class OnNameChanged(val name: String) : NoteDetailsScreenActions()
     data class OnDescriptionChanged(val description: String) : NoteDetailsScreenActions()
     data class OnTypeChanged(val type: NoteObject) : NoteDetailsScreenActions()
