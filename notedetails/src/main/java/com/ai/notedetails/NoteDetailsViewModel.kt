@@ -32,9 +32,7 @@ constructor(
 
     init {
         savedStateHandle.get<String>(NOTE_ID_KEY)?.let { noteId ->
-            viewModelScope.launch(dispatcherProvider.ui()) {
-                handleActions( NoteDetailsScreenActions.GetNoteAndRelated(noteId) )
-            }
+            getNote(noteId)
         }
     }
 
@@ -94,10 +92,17 @@ constructor(
                     updateNote(note)
                 }
             }
-            is NoteDetailsScreenActions.OnRelatedNoteSelected -> setEffect { NoteDetailsScreenEffect.OpenRelatedNote(action.note.id.toString()) }
+            is NoteDetailsScreenActions.OnRelatedNoteSelected -> {
+                getNote(action.note.id.toString())
+            }
         }
     }
 
+    private fun getNote(noteId: String) {
+        viewModelScope.launch(dispatcherProvider.ui()) {
+            handleActions( NoteDetailsScreenActions.GetNoteAndRelated(noteId) )
+        }
+    }
 
     private suspend fun insertNote(note: NoteEntity) {
         viewModelScope.launch(dispatcherProvider.io()) {
