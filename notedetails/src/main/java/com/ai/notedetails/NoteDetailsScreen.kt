@@ -2,6 +2,7 @@ package com.ai.notedetails
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -32,7 +33,7 @@ import com.ai.common.components.NoteCard
 import com.ai.common.components.TopBar
 import com.ai.common.theme.TestAppTheme
 import com.ai.common.utils.HandleEffects
-import com.ai.common_domain.entities.NoteType
+import com.ai.common_domain.entities.NoteEntity
 import com.ai.notedetails.components.TextInputField
 
 
@@ -101,9 +102,9 @@ private fun ValidContent(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .padding(end = 8.dp, bottom = 8.dp)
+            .padding(8.dp)
     ) {
-        Column( modifier = Modifier.padding(top = 8.dp)) {
+        Column {
             TextInputField(
                 header = stringResource(id = R.string.object_name),
                 value = state.note.name,
@@ -119,19 +120,19 @@ private fun ValidContent(
                 value = state.note.type.name,
                 onValueChange = { }
             )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = stringResource(id = R.string.relations))
 
-        }
-
-        LazyColumn(modifier = Modifier.wrapContentSize()) {
-            // for related notes
-            /* items(state.notes) { note ->
-                 NoteCard(
-                     title = note.title,
-                     description = note.description
-                 ) {
-                     action(NoteListScreenActions.OnNoteSelectedClick(note))
-                 }
-             }*/
+            LazyColumn(modifier = Modifier.wrapContentSize()) {
+                items(state.relatedNotes) { note ->
+                    NoteCard(
+                        title = note.name,
+                        description = note.description
+                    ) {
+                        //action(NoteListScreenActions.OnNoteSelectedClick(note))
+                    }
+                }
+            }
         }
     }
     Box(
@@ -180,6 +181,20 @@ fun ErrorContent(modifier : Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     TestAppTheme {
-        ValidContent(state = NoteDetailsScreenState(), action =  {} )
+        ValidContent(
+            state = NoteDetailsScreenState(
+               note = NoteEntity(),
+                relatedNotes = buildList {
+                    add(
+                        NoteEntity()
+                    )
+                    add(
+                        NoteEntity()
+                    )
+                }
+            )
+            ,
+            action =  {}
+        )
     }
 }

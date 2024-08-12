@@ -9,9 +9,10 @@ import com.ai.common.viewmodel.ScreenState
 import com.ai.common_android_data.DispatcherProvider
 import com.ai.common_domain.ResultWrapper
 import com.ai.common_domain.entities.NoteEntity
-import com.ai.common_domain.entities.NoteType
+import com.ai.common_domain.entities.NoteObject
 import com.ai.common_domain.respository.NotesRepository
 import com.ai.common_domain.usecase.GetNoteByIdUseCase
+import com.ai.common_domain.usecase.GetRelatedNotes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -22,6 +23,7 @@ class NoteDetailsViewModel @Inject
 constructor(
     private val dispatcherProvider: DispatcherProvider,
     private val getNoteByIdUsaCase: GetNoteByIdUseCase,
+    private val getRelatedNotes: GetRelatedNotes,
     private val repository: NotesRepository,
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel<NoteDetailsScreenState, NoteDetailsScreenActions, NoteDetailsScreenEffect > () {
@@ -32,10 +34,14 @@ constructor(
                 val result = getNoteByIdUsaCase(noteId)
                 if (result is ResultWrapper.Success) {
                     setScreenState {
-                        copy(
-                            note = result.data,
-                            noteState = NoteState.EDIT
-                        )
+                        copy(note = result.data, noteState = NoteState.EDIT)
+                    }
+
+                    val relatedNotes = getRelatedNotes(result.data)
+                    if (relatedNotes is ResultWrapper.Success) {
+                        setScreenState {
+                            copy(relatedNotes = relatedNotes.data)
+                        }
                     }
                 } else {
                     setScreenState {
@@ -110,6 +116,7 @@ data class NoteDetailsScreenState(
     val isLoading: Boolean = false,
     val note: NoteEntity = NoteEntity(),
     val noteState: NoteState = NoteState.INSERT,
+    val relatedNotes: List<NoteEntity> = emptyList(),
     val error: Boolean = false // this should be a class exposing the error with message but for this sample should be enough
 ): ScreenState
 
@@ -119,7 +126,7 @@ sealed class NoteDetailsScreenActions : Action {
     object GetRelatedNoted : NoteDetailsScreenActions()
     data class OnNameChanged(val name: String) : NoteDetailsScreenActions()
     data class OnDescriptionChanged(val description: String) : NoteDetailsScreenActions()
-    data class OnTypeChanged(val type: NoteType) : NoteDetailsScreenActions()
+    data class OnTypeChanged(val type: NoteObject) : NoteDetailsScreenActions()
 }
 
 sealed class NoteDetailsScreenEffect : Effect {

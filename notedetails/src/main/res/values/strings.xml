@@ -6,4 +6,6 @@
     <string name="object_type">Type</string>
     <string name="object_name">Name</string>
     <string name="object_description">Description</string>
+
+    <string name="relations">Relations: </string>
 </resources>
