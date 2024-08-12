@@ -1,6 +1,5 @@
 package com.ai.notedetails.components
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
@@ -29,29 +28,26 @@ fun TextInputField(
             .fillMaxWidth()
             .padding(vertical = 4.dp)
     ) {
-        Column(modifier = Modifier.padding(4.dp)) {
-            Text(
-                modifier = Modifier.padding(start = 12.dp),
-                text = header,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.primary,
-            )
-            TextField(
-                modifier = modifier
-                    .fillMaxWidth()
-                ,
-                value = value,
-                onValueChange = onValueChange,
-                colors = TextFieldDefaults.textFieldColors(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent
+        TextField(
+            modifier = modifier
+                .fillMaxWidth()
+            ,
+            label = {
+                Text(
+                    text = header,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary,
                 )
+            },
+            value = value,
+            onValueChange = onValueChange,
+            colors = TextFieldDefaults.textFieldColors(
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
             )
-        }
+        )
     }
-
-
 }
 
 @Preview(showBackground = true)

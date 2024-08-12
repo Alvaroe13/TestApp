@@ -105,7 +105,11 @@ private fun ValidContent(
     state: NoteListScreenState,
     action: (NoteListScreenActions) -> Unit
 ) {
-    Box(modifier = modifier.fillMaxSize()) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(8.dp)
+    ) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(state.notes) { note ->
                 NoteCard(

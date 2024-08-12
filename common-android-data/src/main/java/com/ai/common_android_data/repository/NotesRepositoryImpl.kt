@@ -40,6 +40,7 @@ class NotesRepositoryImpl @Inject constructor(
 
     override suspend fun updateNote(note: NoteEntity): ResultWrapper<Int> {
         return safeCall {
+            notesCache?.add(note)
             notesDao.updateNote(noteMapper.mapFrom(note))
         }
     }

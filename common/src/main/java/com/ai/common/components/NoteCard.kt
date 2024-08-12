@@ -16,14 +16,15 @@ import com.ai.common.theme.TestAppTheme
 
 @Composable
 fun NoteCard(
+    modifier: Modifier = Modifier,
     title: String,
     description: String,
     onNoteTapped: () -> Unit = {},
     onLongPressed: () -> Unit = {}
 ) {
     Column(
-        modifier = Modifier
-            .padding(8.dp)
+        modifier = modifier
+            .padding(vertical = 8.dp)
             .pointerInput(Unit) {
                 detectTapGestures(
                     onTap =  { onNoteTapped() },
@@ -34,7 +35,6 @@ fun NoteCard(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 8.dp, end = 8.dp, top = 2.dp, bottom = 2.dp)
         ) {
             Column(
                 modifier = Modifier
@@ -46,11 +46,7 @@ fun NoteCard(
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary,
                 )
-                Text(
-                    text = description,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.primary
-                )
+                Text(text = description)
             }
         }
 
