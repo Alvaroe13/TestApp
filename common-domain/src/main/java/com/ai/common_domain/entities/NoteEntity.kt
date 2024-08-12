@@ -4,14 +4,5 @@ data class NoteEntity(
     val id: Int? = null,
     val name: String = "",
     val description: String = "",
-    val type: NoteType = NoteType.DESK // for testing atm
+    val type: NoteObject = Human()
 )
-
-enum class NoteType {
-    IDLE,
-    DESK,
-    COMPUTER,
-    KEYBOARD,
-    SERVER,
-    HUMAN
-}

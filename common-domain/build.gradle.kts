@@ -2,6 +2,7 @@ plugins {
     id("java-library")
     id("org.jetbrains.kotlin.jvm")
     id("kotlin-kapt")
+    kotlin("plugin.serialization")
 }
 
 java {
@@ -11,4 +12,5 @@ java {
 
 dependencies {
     api(libs.javax.inject.kmm)
+    api(libs.kotlin.serialization)
 }

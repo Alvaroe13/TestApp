@@ -116,7 +116,7 @@ private fun ValidContent(
             )
             TextInputField(
                 header = stringResource(id = R.string.object_type),
-                value = if (state.note.type == NoteType.IDLE) "" else state.note.type.name,
+                value = state.note.type.name,
                 onValueChange = { }
             )
 
