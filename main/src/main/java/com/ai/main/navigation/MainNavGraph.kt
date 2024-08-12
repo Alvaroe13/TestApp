@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.ai.common.navigation.ArgumentKeyConstants.NOTE_ID_KEY
 import com.ai.common.navigation.ScreenDestinations
 import com.ai.notedetails.NoteDetailsScreen
 import com.ai.notelist.NoteListScreen
@@ -26,6 +27,3 @@ fun NavGraphBuilder.mainNavGraph(navController: NavController,) {
         NoteDetailsScreen(navController = navController)
     }
 }
-
-// ideally we would implement an abstraction layer to pull this key from destination class for scalability reasons
-private const val NOTE_ID_KEY = "noteId"

@@ -28,6 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ai.common.components.NoteCard
 import com.ai.common.components.TopBar
+import com.ai.common.navigation.ArgumentKeyConstants.NOTE_ID_KEY
 import com.ai.common.navigation.ScreenDestinations
 import com.ai.common.theme.TestAppTheme
 import com.ai.common.utils.HandleEffects
@@ -47,7 +48,7 @@ fun NoteListScreen(
                 navController.navigate(ScreenDestinations.NoteDetailsScreen.route)
             }
             is NoteListScreenEffects.NoteSelected -> {
-                navController.navigate("${ScreenDestinations.NoteDetailsScreen.route}?noteId=${effect.noteId}")
+                navController.navigate("${ScreenDestinations.NoteDetailsScreen.route}?$NOTE_ID_KEY=${effect.noteId}")
             }
         }
     }

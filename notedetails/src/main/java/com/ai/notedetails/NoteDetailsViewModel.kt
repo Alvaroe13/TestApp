@@ -2,6 +2,7 @@ package com.ai.notedetails
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.ai.common.navigation.ArgumentKeyConstants.NOTE_ID_KEY
 import com.ai.common.viewmodel.Action
 import com.ai.common.viewmodel.BaseViewModel
 import com.ai.common.viewmodel.Effect
@@ -77,6 +78,7 @@ constructor(
                     updateNote(note)
                 }
             }
+            is NoteDetailsScreenActions.OnRelatedNoteSelected -> setEffect { NoteDetailsScreenEffect.OpenRelatedNote(action.note.id.toString()) }
         }
     }
 
@@ -99,10 +101,6 @@ constructor(
                 setEffect { NoteDetailsScreenEffect.GoBack }
             }
         }
-    }
-
-    companion object {
-        private const val NOTE_ID_KEY = "noteId"
     }
 }
 
@@ -127,8 +125,10 @@ sealed class NoteDetailsScreenActions : Action {
     data class OnNameChanged(val name: String) : NoteDetailsScreenActions()
     data class OnDescriptionChanged(val description: String) : NoteDetailsScreenActions()
     data class OnTypeChanged(val type: NoteObject) : NoteDetailsScreenActions()
+    data class OnRelatedNoteSelected(val note: NoteEntity) : NoteDetailsScreenActions()
 }
 
 sealed class NoteDetailsScreenEffect : Effect {
     object GoBack: NoteDetailsScreenEffect()
+    data class OpenRelatedNote(val noteId: String): NoteDetailsScreenEffect()
 }

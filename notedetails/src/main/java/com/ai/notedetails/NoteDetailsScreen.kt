@@ -31,6 +31,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ai.common.components.NoteCard
 import com.ai.common.components.TopBar
+import com.ai.common.navigation.ArgumentKeyConstants.NOTE_ID_KEY
+import com.ai.common.navigation.ScreenDestinations
 import com.ai.common.theme.TestAppTheme
 import com.ai.common.utils.HandleEffects
 import com.ai.common_domain.entities.NoteEntity
@@ -47,7 +49,10 @@ fun NoteDetailsScreen(
 
     HandleEffects(effectFlow = viewModel.effect) { effect ->
         when(effect) {
-            NoteDetailsScreenEffect.GoBack -> navController.navigateUp()
+            is NoteDetailsScreenEffect.GoBack -> navController.navigateUp()
+            is NoteDetailsScreenEffect.OpenRelatedNote -> {
+                navController.navigate("${ScreenDestinations.NoteDetailsScreen.route}?$NOTE_ID_KEY}=${effect.noteId}")
+            }
         }
     }
 
@@ -120,16 +125,18 @@ private fun ValidContent(
                 value = state.note.type.name,
                 onValueChange = { }
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = stringResource(id = R.string.relations))
+            if (state.relatedNotes.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = stringResource(id = R.string.relations))
 
-            LazyColumn(modifier = Modifier.wrapContentSize()) {
-                items(state.relatedNotes) { note ->
-                    NoteCard(
-                        title = note.name,
-                        description = note.description
-                    ) {
-                        //action(NoteListScreenActions.OnNoteSelectedClick(note))
+                LazyColumn(modifier = Modifier.wrapContentSize()) {
+                    items(state.relatedNotes) { note ->
+                        NoteCard(
+                            title = note.name,
+                            description = note.description
+                        ) {
+                            action(NoteDetailsScreenActions.OnRelatedNoteSelected(note))
+                        }
                     }
                 }
             }
