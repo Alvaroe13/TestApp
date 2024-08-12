@@ -10,6 +10,7 @@ import com.ai.common_domain.entities.NoteEntity
 import com.ai.common_domain.respository.NotesRepository
 import com.ai.common_domain.extentions.onError
 import com.ai.common_domain.extentions.onSuccess
+import com.ai.common_domain.usecase.GetNotesByQuery
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class NoteListViewModel @Inject constructor(
     private val dispatcherProvider: DispatcherProvider,
-    private val notesRepository: NotesRepository
+    private val notesRepository: NotesRepository,
+    private val getNotesByQuery: GetNotesByQuery
 ) : BaseViewModel<NoteListScreenState, NoteListScreenActions, NoteListScreenEffects> (){
 
 
@@ -74,6 +76,11 @@ class NoteListViewModel @Inject constructor(
            is NoteListScreenActions.OnSearchQueryChanged -> {
                setScreenState {
                    copy(searchQuery = action.query)
+               }
+               getNotesByQuery(action.query).onSuccess { noteList ->
+                   setScreenState {
+                       copy(notes = noteList)
+                   }
                }
            }
        }

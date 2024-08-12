@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,6 +14,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -87,6 +90,15 @@ private fun UiContent(
                     },
                     actions = { }
                 )
+            },
+
+            floatingActionButton = {
+                Button(
+                    modifier = Modifier.size(70.dp),
+                    onClick = { action(NoteDetailsScreenActions.SaveNote) }
+                ) {
+                    Icon(Icons.Filled.Check, null)
+                }
             }
         ) { paddingValues ->
             if (state.error) {
@@ -161,23 +173,6 @@ private fun ValidContent(
             }
         }
     }
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(end = 8.dp, bottom = 8.dp),
-        contentAlignment = Alignment.BottomEnd
-    ) {
-        Button(
-            modifier = Modifier
-                .width(55.dp)
-                .height(55.dp),
-            onClick = { action(NoteDetailsScreenActions.SaveNote) },
-            shape = CircleShape,
-        ) {
-            Icon(Icons.Filled.Add, null)
-        }
-    }
-
 }
 
 @Composable
