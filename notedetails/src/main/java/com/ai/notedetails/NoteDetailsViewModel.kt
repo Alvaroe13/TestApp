@@ -9,6 +9,7 @@ import com.ai.common.viewmodel.Effect
 import com.ai.common.viewmodel.ScreenState
 import com.ai.common_android_data.DispatcherProvider
 import com.ai.common_domain.entities.NoteEntity
+import com.ai.common_domain.entities.NoteObject
 import com.ai.common_domain.extentions.onError
 import com.ai.common_domain.extentions.onSuccess
 import com.ai.common_domain.respository.NotesRepository
@@ -63,6 +64,13 @@ constructor(
                     }
             }
             is NoteDetailsScreenActions.UpdateNote -> {}
+            is NoteDetailsScreenActions.OnTypeSelected -> {
+                setScreenState {
+                    copy(
+                        note = currentScreenState.note.copy(type = action.noteObject)
+                    )
+                }
+            }
             is NoteDetailsScreenActions.OnNameChanged -> {
                 setScreenState {
                     copy(note = currentScreenState.note.copy(name = action.name))
@@ -134,6 +142,7 @@ sealed class NoteDetailsScreenActions : Action {
     data class OnNameChanged(val name: String) : NoteDetailsScreenActions()
     data class OnDescriptionChanged(val description: String) : NoteDetailsScreenActions()
     data class OnTypeChanged(val show: Boolean) : NoteDetailsScreenActions()
+    data class OnTypeSelected(val noteObject: NoteObject) : NoteDetailsScreenActions()
     data class OnRelatedNoteSelected(val note: NoteEntity) : NoteDetailsScreenActions()
 }
 

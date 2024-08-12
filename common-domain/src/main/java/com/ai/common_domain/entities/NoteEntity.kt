@@ -4,5 +4,6 @@ data class NoteEntity(
     val id: Int? = null,
     val name: String = "",
     val description: String = "",
-    val type: NoteObject = Desk()
+    val type: NoteObject = Human(),
+    //val typeName: String = type.name
 )

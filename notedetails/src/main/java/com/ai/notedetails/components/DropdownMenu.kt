@@ -10,28 +10,51 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.ai.common_domain.entities.Computer
+import com.ai.common_domain.entities.Desk
+import com.ai.common_domain.entities.Human
+import com.ai.common_domain.entities.Keyboard
+import com.ai.common_domain.entities.NoteObject
+import com.ai.common_domain.entities.Server
 
 @Composable
 fun Dropdown(
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onOptionSelected: (option: NoteObject) -> Unit = {}
 ) {
-    var display by remember { mutableStateOf(true) }
+    var expanded by remember { mutableStateOf(true) }
 
-    if (display) {
+    if (expanded) {
         DropdownMenu(
             modifier = Modifier
                 .wrapContentHeight()
             ,
-            expanded = display ,
+            expanded = expanded ,
             onDismissRequest = {
-                display = false
+                expanded = false
                 onDismiss()
             }
         ) {
-            DropdownMenuItem(
-                text = {  Text(text = "something") },
-                onClick = { }
-            )
+
+            option().forEach {
+                DropdownMenuItem(
+                    text = {  Text(text = it.name) },
+                    onClick = {
+                        onOptionSelected(it)
+                        onDismiss()
+                    }
+                )
+            }
         }
+    }
+}
+
+private fun option() : Set<NoteObject> {
+    return buildSet {
+        add(Desk())
+        add(Human())
+        add(Server())
+        add(Keyboard())
+        add(Computer())
     }
 }

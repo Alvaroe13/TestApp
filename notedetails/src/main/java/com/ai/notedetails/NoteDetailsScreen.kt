@@ -126,12 +126,15 @@ private fun ValidContent(
                 NoteCard(
                     title = stringResource(id = R.string.object_type),
                     description = state.note.type.name,
-                    onSelectedNote = { action(NoteDetailsScreenActions.OnTypeChanged(true)) }
+                    onNoteTapped = { action(NoteDetailsScreenActions.OnTypeChanged(true)) }
                 )
                 if (state.showOptions) {
-                    Dropdown {
-                        action(NoteDetailsScreenActions.OnTypeChanged(false))
-                    }
+                    Dropdown(
+                        onDismiss = { action(NoteDetailsScreenActions.OnTypeChanged(false)) } ,
+                        onOptionSelected = {
+                            action(NoteDetailsScreenActions.OnTypeSelected(it))
+                        }
+                    )
                 }
             }
             if (state.relatedNotes.isNotEmpty()) {

@@ -17,12 +17,12 @@ import com.ai.common.theme.TestAppTheme
 fun NoteCard(
     title: String,
     description: String,
-    onSelectedNote: () -> Unit = {}
+    onNoteTapped: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
             .padding(8.dp)
-            .clickable { onSelectedNote() }
+            .clickable { onNoteTapped() }
     ) {
         Card(
             modifier = Modifier
