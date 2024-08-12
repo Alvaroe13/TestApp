@@ -9,7 +9,6 @@ import com.ai.common.viewmodel.Effect
 import com.ai.common.viewmodel.ScreenState
 import com.ai.common_android_data.DispatcherProvider
 import com.ai.common_domain.entities.NoteEntity
-import com.ai.common_domain.entities.NoteObject
 import com.ai.common_domain.extentions.onError
 import com.ai.common_domain.extentions.onSuccess
 import com.ai.common_domain.respository.NotesRepository
@@ -74,7 +73,11 @@ constructor(
                     copy(note = currentScreenState.note.copy(description = action.description))
                 }
             }
-            is NoteDetailsScreenActions.OnTypeChanged -> {}
+            is NoteDetailsScreenActions.OnTypeChanged -> {
+                setScreenState {
+                    copy(showOptions = action.show)
+                }
+            }
             is NoteDetailsScreenActions.SaveNote -> {
                 val note = currentScreenState.note
                 if (currentScreenState.noteState == NoteState.INSERT) {
@@ -120,6 +123,7 @@ data class NoteDetailsScreenState(
     val note: NoteEntity = NoteEntity(),
     val noteState: NoteState = NoteState.INSERT,
     val relatedNotes: List<NoteEntity> = emptyList(),
+    var showOptions: Boolean = false,
     val error: Boolean = false // this should be a class exposing the error with message but for this sample should be enough
 ): ScreenState
 
@@ -129,7 +133,7 @@ sealed class NoteDetailsScreenActions : Action {
     data class GetNoteAndRelated(val noteId: String) : NoteDetailsScreenActions()
     data class OnNameChanged(val name: String) : NoteDetailsScreenActions()
     data class OnDescriptionChanged(val description: String) : NoteDetailsScreenActions()
-    data class OnTypeChanged(val type: NoteObject) : NoteDetailsScreenActions()
+    data class OnTypeChanged(val show: Boolean) : NoteDetailsScreenActions()
     data class OnRelatedNoteSelected(val note: NoteEntity) : NoteDetailsScreenActions()
 }
 

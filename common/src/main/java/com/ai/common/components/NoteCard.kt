@@ -17,7 +17,7 @@ import com.ai.common.theme.TestAppTheme
 fun NoteCard(
     title: String,
     description: String,
-    onSelectedNote: () -> Unit
+    onSelectedNote: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier

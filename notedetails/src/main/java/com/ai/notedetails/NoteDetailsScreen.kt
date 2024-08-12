@@ -36,6 +36,7 @@ import com.ai.common.navigation.ScreenDestinations
 import com.ai.common.theme.TestAppTheme
 import com.ai.common.utils.HandleEffects
 import com.ai.common_domain.entities.NoteEntity
+import com.ai.notedetails.components.Dropdown
 import com.ai.notedetails.components.TextInputField
 
 
@@ -120,11 +121,19 @@ private fun ValidContent(
                 value = state.note.description,
                 onValueChange = { action(NoteDetailsScreenActions.OnDescriptionChanged(it)) }
             )
-            TextInputField(
-                header = stringResource(id = R.string.object_type),
-                value = state.note.type.name,
-                onValueChange = { }
-            )
+
+            Box {
+                NoteCard(
+                    title = stringResource(id = R.string.object_type),
+                    description = state.note.type.name,
+                    onSelectedNote = { action(NoteDetailsScreenActions.OnTypeChanged(true)) }
+                )
+                if (state.showOptions) {
+                    Dropdown {
+                        action(NoteDetailsScreenActions.OnTypeChanged(false))
+                    }
+                }
+            }
             if (state.relatedNotes.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(text = stringResource(id = R.string.relations))
