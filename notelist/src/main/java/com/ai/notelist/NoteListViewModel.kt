@@ -6,9 +6,10 @@ import com.ai.common.viewmodel.BaseViewModel
 import com.ai.common.viewmodel.Effect
 import com.ai.common.viewmodel.ScreenState
 import com.ai.common_android_data.DispatcherProvider
-import com.ai.common_domain.ResultWrapper
 import com.ai.common_domain.entities.NoteEntity
 import com.ai.common_domain.respository.NotesRepository
+import com.ai.common_domain.extentions.onError
+import com.ai.common_domain.extentions.onSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,18 +25,18 @@ class NoteListViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(dispatcherProvider.io()) {
-            val notes = notesRepository.getAllNotes()
-            if (notes is ResultWrapper.Success) { // Instead of if/else block in every screen we could create an extension function delivering the result with a more sophisticated logic
-                setScreenState {
-                    copy(notes = notes.data)
-                }
-            }
-            if (notes is ResultWrapper.Failure) {
-                setScreenState {
-                    copy(error = true) // here we should implement a more sophisticated error handling mechanism but for this demo it does the trick
-                }
-            }
 
+            notesRepository.getAllNotes()
+                .onSuccess { notes ->
+                    setScreenState {
+                        copy(notes = notes)
+                    }
+               }
+                .onError {
+                    setScreenState {
+                        copy(error = true)
+                    }
+                }
         }
     }
 
