@@ -1,5 +1,6 @@
 package com.ai.notelist
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -29,6 +30,7 @@ import androidx.navigation.NavController
 import com.ai.common.components.NoteCard
 import com.ai.common.components.TopBar
 import com.ai.common.navigation.ArgumentKeyConstants.NOTE_ID_KEY
+import com.ai.common.navigation.ArgumentKeyConstants.REFRESH_KEY
 import com.ai.common.navigation.ScreenDestinations
 import com.ai.common.theme.TestAppTheme
 import com.ai.common.utils.HandleEffects
@@ -53,12 +55,14 @@ fun NoteListScreen(
         }
     }
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
-    ) {
-        UiContent(state = state, action = viewModel::setAction)
+    navController.currentBackStackEntry?.savedStateHandle?.get<Boolean>(REFRESH_KEY)?.let {
+        if (it) {
+            viewModel.setAction(action = NoteListScreenActions.LoadNotes)
+            navController.currentBackStackEntry?.savedStateHandle?.set(REFRESH_KEY, false)
+        }
     }
+
+    UiContent(state = state, action = viewModel::setAction)
 }
 
 @Composable
@@ -67,26 +71,33 @@ private fun UiContent(
     state: NoteListScreenState,
     action: (action: NoteListScreenActions) -> Unit
 ) {
-    Scaffold(
-        topBar = {
-            TopBar(
-                title = { Text(text = stringResource(id = R.string.`object`)) },
-                actions = { }
-            )
-        },
-        content = { paddingValues ->
-            if (state.error) {
-                ErrorContent(modifier.padding(paddingValues))
-            } else {
-                if (state.isLoading) LoadingContent(modifier.padding(paddingValues))
-                else ValidContent(
-                    modifier = modifier.padding(paddingValues),
-                    state = state,
-                    action = action
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+
+        Scaffold(
+            topBar = {
+                TopBar(
+                    title = { Text(text = stringResource(id = R.string.`object`)) },
+                    actions = { }
                 )
+            },
+            content = { paddingValues ->
+                if (state.error) {
+                    ErrorContent(modifier.padding(paddingValues))
+                } else {
+                    if (state.isLoading) LoadingContent(modifier.padding(paddingValues))
+                    else ValidContent(
+                        modifier = modifier.padding(paddingValues),
+                        state = state,
+                        action = action
+                    )
+                }
             }
-        }
-    )
+        )
+
+    }
 }
 @Composable
 private fun ValidContent(

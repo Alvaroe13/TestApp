@@ -32,6 +32,7 @@ import androidx.navigation.NavController
 import com.ai.common.components.NoteCard
 import com.ai.common.components.TopBar
 import com.ai.common.navigation.ArgumentKeyConstants.NOTE_ID_KEY
+import com.ai.common.navigation.ArgumentKeyConstants.REFRESH_KEY
 import com.ai.common.navigation.ScreenDestinations
 import com.ai.common.theme.TestAppTheme
 import com.ai.common.utils.HandleEffects
@@ -50,7 +51,10 @@ fun NoteDetailsScreen(
 
     HandleEffects(effectFlow = viewModel.effect) { effect ->
         when(effect) {
-            is NoteDetailsScreenEffect.GoBack -> navController.navigateUp()
+            is NoteDetailsScreenEffect.GoBack -> {
+                navController.previousBackStackEntry?.savedStateHandle?.set(REFRESH_KEY, true)
+                navController.navigateUp()
+            }
             is NoteDetailsScreenEffect.OpenRelatedNote -> {
                 navController.navigate("${ScreenDestinations.NoteDetailsScreen.route}?$NOTE_ID_KEY}=${effect.noteId}")
             }

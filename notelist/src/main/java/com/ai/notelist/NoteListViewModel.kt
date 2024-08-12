@@ -24,6 +24,23 @@ class NoteListViewModel @Inject constructor(
     override fun createInitialScreenSate(): NoteListScreenState = NoteListScreenState()
 
     init {
+        loadNotes()
+    }
+
+    override suspend fun handleActions(action: NoteListScreenActions) {
+       when(action) {
+           is NoteListScreenActions.LoadNotes -> loadNotes()
+
+           is NoteListScreenActions.OnNoteSelectedClick ->  setEffect {
+               NoteListScreenEffects.NoteSelected(action.note.id ?: throw IllegalArgumentException("this id cannot be null") )
+           }
+
+           is NoteListScreenActions.OnNewNoteClick -> setEffect { NoteListScreenEffects.CreateNewNoteClicked }
+           else -> {}
+       }
+    }
+
+    private fun loadNotes() {
         viewModelScope.launch(dispatcherProvider.io()) {
 
             notesRepository.getAllNotes()
@@ -31,23 +48,13 @@ class NoteListViewModel @Inject constructor(
                     setScreenState {
                         copy(notes = notes)
                     }
-               }
+                }
                 .onError {
                     setScreenState {
                         copy(error = true)
                     }
                 }
         }
-    }
-
-    override suspend fun handleActions(action: NoteListScreenActions) {
-       when(action) {
-           is NoteListScreenActions.OnNoteSelectedClick ->  setEffect {
-               NoteListScreenEffects.NoteSelected(action.note.id ?: throw IllegalArgumentException("this id cannot be null") )
-           }
-           is NoteListScreenActions.OnNewNoteClick -> setEffect { NoteListScreenEffects.CreateNewNoteClicked }
-           else -> {}
-       }
     }
 }
 
@@ -63,6 +70,8 @@ sealed class NoteListScreenEffects : Effect{
 }
 
 sealed class NoteListScreenActions : Action {
+
+    object LoadNotes: NoteListScreenActions()
     object OnNewNoteClick : NoteListScreenActions()
     data class OnNoteSelectedClick(val note: NoteEntity) : NoteListScreenActions()
 }
