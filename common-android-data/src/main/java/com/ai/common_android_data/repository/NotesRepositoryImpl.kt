@@ -33,23 +33,37 @@ class NotesRepositoryImpl @Inject constructor(
 
     override suspend fun insertNote(note: NoteEntity): ResultWrapper<Long> {
         return safeCall {
-            notesCache?.add(note)
-            notesDao.insertNote( noteMapper.mapFrom(note) )
+            notesDao.insertNote( noteMapper.mapFrom(note) ).also {
+                updateCache()
+            }
         }
     }
 
     override suspend fun updateNote(note: NoteEntity): ResultWrapper<Int> {
         return safeCall {
-            notesCache?.add(note)
-            notesDao.updateNote(noteMapper.mapFrom(note))
+            notesDao.updateNote(noteMapper.mapFrom(note)).also {
+                updateCache()
+            }
         }
     }
 
     override suspend fun deleteNote(note: NoteEntity): ResultWrapper<Int> {
         return safeCall {
-            notesCache?.removeIf { note.id == it.id }
-            notesDao.deleteNote(noteMapper.mapFrom(note))
+            notesDao.deleteNote(noteMapper.mapFrom(note)).also {
+                updateCache()
+            }
         }
     }
 
+    /**
+     * ideally we would create a cache layer (Repo layer) and handle the cache
+     */
+    private suspend fun updateCache() {
+        safeCall {
+            notesDao.getAllNotes().map { noteMapper.mapTo(it) }.also {
+                notesCache?.clear()
+                notesCache?.addAll(it)
+            }
+        }
+    }
 }

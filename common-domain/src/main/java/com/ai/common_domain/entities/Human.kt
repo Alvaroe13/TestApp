@@ -8,7 +8,9 @@ data class Human(
 ) : NoteObject{
     override fun isRelated(noteObject: NoteObject): Boolean {
         return noteObject is Desk ||
-                 noteObject is Computer
+                 noteObject is Computer ||
+                 noteObject is Keyboard ||
+                 noteObject is Human
     }
 
 }

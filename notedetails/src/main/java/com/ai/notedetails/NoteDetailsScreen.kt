@@ -7,14 +7,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -160,7 +156,10 @@ private fun ValidContent(
                 Text(text = stringResource(id = R.string.relations))
 
                 LazyColumn(modifier = Modifier.wrapContentSize()) {
-                    items(state.relatedNotes) { note ->
+                    items(
+                        key = { it.id.toString() },
+                        items = state.relatedNotes
+                    ) { note ->
                         NoteCard(
                             title = note.name,
                             description = note.description,

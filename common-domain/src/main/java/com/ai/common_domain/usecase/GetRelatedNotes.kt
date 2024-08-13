@@ -12,7 +12,9 @@ class GetRelatedNotes @Inject constructor(
     suspend operator fun invoke(note: NoteEntity) : ResultWrapper<List<NoteEntity>> {
         val result = notesRepository.getAllNotes()
         return if (result is ResultWrapper.Success) {
-            val relatedNotes = result.data.filter { it.type.isRelated(note.type) }
+            val relatedNotes = result.data.filter {
+                it.type.isRelated(note.type) && it.id != note.id
+            }
             ResultWrapper.Success(relatedNotes)
         } else {
            result

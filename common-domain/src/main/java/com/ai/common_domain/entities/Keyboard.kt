@@ -8,6 +8,7 @@ data class Keyboard(
 ) : NoteObject {
     override fun isRelated(noteObject: NoteObject): Boolean {
         return noteObject is Human ||
-                noteObject is Computer
+                noteObject is Computer ||
+                noteObject is Keyboard
     }
 }

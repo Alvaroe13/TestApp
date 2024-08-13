@@ -134,7 +134,10 @@ private fun ValidContent(
             Spacer(modifier = Modifier.height(30.dp))
 
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(state.notes) { note ->
+                items(
+                    key = { it.id.toString() },
+                    items = state.notes
+                ) { note ->
                     NoteCard(
                         title = note.name,
                         description = note.description,

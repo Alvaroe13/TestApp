@@ -7,6 +7,7 @@ data class Server(
     override val name: String = Server::class.simpleName!!
 ) : NoteObject {
     override fun isRelated(noteObject: NoteObject): Boolean {
-        return noteObject is Computer
+        return noteObject is Computer ||
+                noteObject is Server
     }
 }
