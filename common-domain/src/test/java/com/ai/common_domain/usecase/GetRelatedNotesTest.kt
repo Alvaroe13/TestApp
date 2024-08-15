@@ -1,5 +1,6 @@
-package com.ai.notelist
+package com.ai.common_domain.usecase
 
+import com.ai.common_domain.EntityFactory
 import com.ai.common_domain.ResultWrapper
 import com.ai.common_domain.entities.Computer
 import com.ai.common_domain.entities.Desk
@@ -7,7 +8,6 @@ import com.ai.common_domain.entities.Human
 import com.ai.common_domain.entities.Keyboard
 import com.ai.common_domain.entities.Server
 import com.ai.common_domain.respository.NotesRepository
-import com.ai.common_domain.usecase.GetRelatedNotes
 import io.mockk.coEvery
 import org.junit.Test
 
@@ -31,7 +31,7 @@ class GetRelatedNotesTest {
     fun given_note_of_type_server_return_only_related(): Unit = runTest {
 
         //given
-        val note = EntityFactory.makeNoteEntity( type = Server() )
+        val note = EntityFactory.makeNoteEntity(type = Server())
         coEvery { getRelatedNotes.invoke(note) } returns
                 ResultWrapper.Success(EntityFactory.getNotEntityList())
 
@@ -39,7 +39,7 @@ class GetRelatedNotesTest {
         val result = getRelatedNotes.invoke(note)
 
         //then
-        assert( result is ResultWrapper.Success )
+        assert( result is ResultWrapper.Success)
         val data = (result as ResultWrapper.Success).data
         assert( data.isNotEmpty() )
         assert(
@@ -51,10 +51,10 @@ class GetRelatedNotesTest {
     }
 
     @Test
-    fun given_note_of_type_server_DO_NOT_return_only_related(): Unit = runTest {
+    fun given_note_of_type_server_return_only_related_force_error(): Unit = runTest {
 
         //given
-        val note = EntityFactory.makeNoteEntity( type = Server() )
+        val note = EntityFactory.makeNoteEntity(type = Server())
         coEvery { getRelatedNotes.invoke(note) } returns
                 ResultWrapper.Success(EntityFactory.getNotEntityList())
 
@@ -62,7 +62,7 @@ class GetRelatedNotesTest {
         val result = getRelatedNotes.invoke(note)
 
         //then
-        assert( result is ResultWrapper.Success )
+        assert( result is ResultWrapper.Success)
         val data = (result as ResultWrapper.Success).data
         assert( data.isNotEmpty() )
         assert(
@@ -73,7 +73,7 @@ class GetRelatedNotesTest {
     @Test
     fun given_note_of_type_server_return_only_related_excluding_itself(): Unit = runTest {
         //given
-        val note = EntityFactory.makeNoteEntity( type = Server() )
+        val note = EntityFactory.makeNoteEntity(type = Server())
         val payloadReturn = EntityFactory.getNotEntityList().toMutableList().apply { add(note) }
         coEvery { getRelatedNotes.invoke(note) } returns
                 ResultWrapper.Success(payloadReturn)
@@ -82,7 +82,7 @@ class GetRelatedNotesTest {
         val result = getRelatedNotes.invoke(note)
 
         //then
-        assert( result is ResultWrapper.Success )
+        assert( result is ResultWrapper.Success)
         val data = (result as ResultWrapper.Success).data
         assert( data.isNotEmpty() )
         assertNull(data.find { it.id == note.id })

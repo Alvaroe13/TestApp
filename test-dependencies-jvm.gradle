@@ -1,0 +1,6 @@
+dependencies {
+    testImplementation libs.junit
+    testImplementation libs.testng
+    testImplementation libs.mockk
+    testImplementation libs.coroutines.test
+}

@@ -5,6 +5,8 @@ plugins {
     kotlin("plugin.serialization")
 }
 
+apply(from = "$rootDir/test-dependencies-jvm.gradle")
+
 java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17

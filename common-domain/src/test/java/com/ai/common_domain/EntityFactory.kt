@@ -1,4 +1,4 @@
-package com.ai.notelist
+package com.ai.common_domain
 
 import com.ai.common_domain.entities.Computer
 import com.ai.common_domain.entities.Desk

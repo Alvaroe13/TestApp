@@ -9,6 +9,7 @@ plugins {
 apply(from = "$rootDir/feature-dependencies.gradle")
 apply(from = "$rootDir/android-config.gradle")
 apply(from = "$rootDir/test-dependencies.gradle")
+apply(from = "$rootDir/test-dependencies-jvm.gradle")
 
 android.namespace = "com.ai.notelist"
 
