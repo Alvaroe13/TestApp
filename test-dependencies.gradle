@@ -1,5 +1,11 @@
 dependencies {
     testImplementation libs.junit
+    testImplementation libs.testng
+    testImplementation libs.mockk
+    testImplementation libs.mockk.android
+    testImplementation libs.mockk.agent
+    testImplementation libs.coroutines.test
+
     androidTestImplementation libs.androidx.test.ext.junit
     androidTestImplementation libs.espresso.core
     androidTestImplementation platform(libs.compose.bom)
