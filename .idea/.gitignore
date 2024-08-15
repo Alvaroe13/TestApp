@@ -4,3 +4,5 @@
 /gradle.xml
 /kotlinc.xml
 /misc.xml
+*
+!.gitignore
