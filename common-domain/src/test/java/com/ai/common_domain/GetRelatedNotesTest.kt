@@ -1,13 +1,15 @@
-package com.ai.common_domain.usecase
+package com.ai.common_domain
 
-import com.ai.common_domain.EntityFactory
 import com.ai.common_domain.ResultWrapper
 import com.ai.common_domain.entities.Computer
 import com.ai.common_domain.entities.Desk
 import com.ai.common_domain.entities.Human
 import com.ai.common_domain.entities.Keyboard
+import com.ai.common_domain.entities.NoteEntity
+import com.ai.common_domain.entities.NoteObject
 import com.ai.common_domain.entities.Server
 import com.ai.common_domain.respository.NotesRepository
+import com.ai.common_domain.usecase.GetRelatedNotes
 import io.mockk.coEvery
 import org.junit.Test
 
@@ -15,6 +17,7 @@ import io.mockk.mockk
 import junit.framework.TestCase.assertNull
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
+import kotlin.random.Random
 
 class GetRelatedNotesTest {
 
@@ -31,9 +34,9 @@ class GetRelatedNotesTest {
     fun given_note_of_type_server_return_only_related(): Unit = runTest {
 
         //given
-        val note = EntityFactory.makeNoteEntity(type = Server())
-        coEvery { getRelatedNotes.invoke(note) } returns
-                ResultWrapper.Success(EntityFactory.getNotEntityList())
+        val note = makeNoteEntity(type = Server())
+        coEvery { repository.getAllNotes() } returns
+                ResultWrapper.Success(getNotEntityList())
 
         //when
         val result = getRelatedNotes.invoke(note)
@@ -54,9 +57,9 @@ class GetRelatedNotesTest {
     fun given_note_of_type_server_return_only_related_force_error(): Unit = runTest {
 
         //given
-        val note = EntityFactory.makeNoteEntity(type = Server())
-        coEvery { getRelatedNotes.invoke(note) } returns
-                ResultWrapper.Success(EntityFactory.getNotEntityList())
+        val note = makeNoteEntity(type = Server())
+        coEvery { repository.getAllNotes() } returns
+                ResultWrapper.Success(getNotEntityList())
 
         //when
         val result = getRelatedNotes.invoke(note)
@@ -73,9 +76,9 @@ class GetRelatedNotesTest {
     @Test
     fun given_note_of_type_server_return_only_related_excluding_itself(): Unit = runTest {
         //given
-        val note = EntityFactory.makeNoteEntity(type = Server())
-        val payloadReturn = EntityFactory.getNotEntityList().toMutableList().apply { add(note) }
-        coEvery { getRelatedNotes.invoke(note) } returns
+        val note = makeNoteEntity(type = Server())
+        val payloadReturn = getNotEntityList().toMutableList().apply { add(note) }
+        coEvery { repository.getAllNotes() } returns
                 ResultWrapper.Success(payloadReturn)
 
         //when
@@ -86,6 +89,54 @@ class GetRelatedNotesTest {
         val data = (result as ResultWrapper.Success).data
         assert( data.isNotEmpty() )
         assertNull(data.find { it.id == note.id })
+    }
+
+    private fun makeNoteEntity(type: NoteObject = Human() ): NoteEntity {
+        return NoteEntity(
+            id = 1,
+            name ="Anything",
+            description = "Any",
+            type = type
+        )
+    }
+
+    private fun getNotEntityList() = buildList {
+        add(
+            makeNoteEntity()
+        )
+        add(
+            NoteEntity(
+                id = Random.nextInt(2, 30),
+                name ="Clean the desk",
+                description = "Tidy up the room",
+                type = Desk()
+            )
+        )
+        add(
+            NoteEntity(
+                id = Random.nextInt(31, 50),
+                name ="Update the software",
+                description = "Update the software",
+                type = Server()
+            )
+        )
+        add(
+            NoteEntity(
+                id = Random.nextInt(31, 50),
+                name ="Buy new keyboard",
+                description = "Old keyboard if not good",
+                type = Keyboard()
+            )
+        )
+        add(
+            NoteEntity(
+                id = Random.nextInt(31, 50),
+                name ="Unblock desktop screen",
+                description = "This is important",
+                type = Computer()
+            )
+        )
+
     }
 
 }
