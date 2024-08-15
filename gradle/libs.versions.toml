@@ -38,6 +38,9 @@ inject = "1"
 room = "2.6.1"
 material_design3 = "1.2.0"
 
+# Test
+testng = "6.9.6"
+
 [libraries]
 gradle_plugin = { module = "com.android.tools.build:gradle", version.ref = "gradle_plugin" }
 kotlin_plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -106,3 +109,4 @@ ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+testng = { group = "org.testng", name = "testng", version.ref = "testng" }

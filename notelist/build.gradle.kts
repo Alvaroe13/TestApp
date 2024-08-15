@@ -14,4 +14,10 @@ android.namespace = "com.ai.notelist"
 dependencies {
     implementation(project(":common"))
     implementation(project(":common-android-data"))
+
+    testImplementation("io.mockk:mockk:1.13.12")
+    testImplementation("io.mockk:mockk-android:1.13.12")
+    testImplementation("io.mockk:mockk-agent:1.13.12")
+    testImplementation(libs.testng)
+    testImplementation(libs.coroutines.test)
 }
