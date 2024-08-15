@@ -39,7 +39,9 @@ room = "2.6.1"
 material_design3 = "1.2.0"
 
 # Test
+# Unit test
 testng = "6.9.6"
+mockk = "1.13.12"
 
 [libraries]
 gradle_plugin = { module = "com.android.tools.build:gradle", version.ref = "gradle_plugin" }
@@ -107,6 +109,9 @@ androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+# Unit test
 testng = { group = "org.testng", name = "testng", version.ref = "testng" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk"}
+mockk_android = { module = "io.mockk:mockk-android", version.ref = "mockk"}
+mockk_agent = { module = "io.mockk:mockk-agent", version.ref = "mockk"}

@@ -11,23 +11,22 @@ import io.mockk.mockk
 import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.runBlocking
+import org.junit.Before
 
 class GetRelatedNotesTest {
 
     lateinit var getRelatedNotes : GetRelatedNotes
+    lateinit var repository : NotesRepository
 
-   /* @Before
+    @Before
     fun setUp() {
-        MockKAnnotations.init(this)
-        this.getRelatedNotes = (GetRelatedNotes(repository))
-    }*/
+        repository = mockk<NotesRepository>()
+        getRelatedNotes = (GetRelatedNotes(repository))
+    }
 
     @Test
     fun addition_isCorrect(): Unit = runBlocking {
         //assertEquals(4, 2 + 2)
-
-        val repository = mockk<NotesRepository>()
-        getRelatedNotes = GetRelatedNotes(repository)
 
         //given
          coEvery { getRelatedNotes.invoke(EntityFactory.getNoteEntity()) } returns
@@ -38,8 +37,7 @@ class GetRelatedNotesTest {
 
         //then
         assert( result is ResultWrapper.Success)
-        //assert( (result as ResultWrapper.Success).data.isNotEmpty() )
-
+        assert( (result as ResultWrapper.Success).data.isNotEmpty() )
     }
 
 }
