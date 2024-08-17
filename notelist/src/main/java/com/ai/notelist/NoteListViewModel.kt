@@ -51,7 +51,10 @@ class NoteListViewModel @Inject constructor(
 
            is NoteListScreenActions.OnNoteDeletionConfirmed -> {
                setScreenState {
-                   copy(showDeleteOption = false)
+                   copy(
+                       showDeleteOption = false,
+                       noteForDeletion = null
+                   )
                }
                viewModelScope.launch(dispatcherProvider.io()) {
                    notesRepository.deleteNote(action.note)
@@ -72,7 +75,7 @@ class NoteListViewModel @Inject constructor(
 
            is NoteListScreenActions.OnNoteDeletionCancelled -> {
                setScreenState {
-                   copy(showDeleteOption = false, error = false)
+                   copy(showDeleteOption = false, error = false, noteForDeletion = null)
                }
            }
            is NoteListScreenActions.OnSearchQueryChanged -> {

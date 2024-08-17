@@ -2,11 +2,12 @@ package com.ai.notelist
 
 import com.ai.common_domain.ResultWrapper
 import com.ai.common_domain.ResultWrapperError
+import com.ai.common_domain.entities.NoteEntity
 import com.ai.common_domain.respository.NotesRepository
 import com.ai.common_domain.usecase.GetNotesByQuery
 import com.ai.notelist.dispatcher.DispatcherProviderTestImpl
 import com.ai.notelist.repository.NotesRepositoryTestImpl
-import com.ai.notelist.utils.ViewModelStateVerifier
+import com.ai.notelist.utils.NoteListViewModelStateVerifier
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -61,7 +62,7 @@ class NoteListViewModelTest {
         runCurrent()
 
         //then
-        ViewModelStateVerifier.Builder(viewModel)
+        NoteListViewModelStateVerifier.Builder(viewModel)
             .verifyIsNotLoading()
             .verifyNotesAreEmpty()
             .verifyErrorIsFalse()
@@ -79,7 +80,7 @@ class NoteListViewModelTest {
         runCurrent()
 
         //then
-        ViewModelStateVerifier.Builder(viewModel)
+        NoteListViewModelStateVerifier.Builder(viewModel)
             .verifyIsNotLoading()
             .verifyNotesAreEmpty()
             .verifyErrorIsTrue()
@@ -96,7 +97,7 @@ class NoteListViewModelTest {
         runCurrent()
 
         //then
-        ViewModelStateVerifier.Builder(viewModel)
+        NoteListViewModelStateVerifier.Builder(viewModel)
             .verifyIsNotLoading()
             .verifyNotesAreEmpty()
             .verifyErrorIsTrue()
@@ -113,7 +114,7 @@ class NoteListViewModelTest {
         runCurrent()
 
         //then
-        ViewModelStateVerifier.Builder(viewModel)
+        NoteListViewModelStateVerifier.Builder(viewModel)
             .verifyIsNotLoading()
             .verifyNotesAreEmpty()
             .verifyErrorIsTrue()
@@ -124,10 +125,57 @@ class NoteListViewModelTest {
         runCurrent()
 
         //then
-        ViewModelStateVerifier.Builder(viewModel)
+        NoteListViewModelStateVerifier.Builder(viewModel)
             .verifyIsNotLoading()
             .verifyNotesAreEmpty()
             .verifyErrorIsFalse()
     }
 
+    @Test
+    fun `given note pressed for deletion shows dialog and on tap hides it`() = runTest {
+        //given
+        notesRepository = mockk()
+        coEvery { notesRepository.getAllNotes() } coAnswers { ResultWrapper.Success(listOf()) }
+        viewModel = NoteListViewModel(dispatcherProvider, notesRepository, getNotesByQuery)
+
+        //when
+        viewModel.setAction(NoteListScreenActions.OnNoteLongPressed(NoteEntity()))
+        runCurrent()
+
+        //then
+        NoteListViewModelStateVerifier.Builder(viewModel)
+            .verifyShowDeletionTrue()
+
+        //when
+        viewModel.setAction(NoteListScreenActions.OnNoteDeletionCancelled)
+        runCurrent()
+
+        //then
+        NoteListViewModelStateVerifier.Builder(viewModel)
+            .verifyShowDeletionFalse()
+    }
+
+    @Test
+    fun `given selected note for deletion then is no longer selected`() = runTest {
+        //given
+        notesRepository = mockk()
+        coEvery { notesRepository.getAllNotes() } coAnswers { ResultWrapper.Success(listOf()) }
+        viewModel = NoteListViewModel(dispatcherProvider, notesRepository, getNotesByQuery)
+
+        //when
+        viewModel.setAction(NoteListScreenActions.OnNoteLongPressed(NoteEntity()))
+        runCurrent()
+
+        //then
+        NoteListViewModelStateVerifier.Builder(viewModel)
+            .verifyNoteForDeletionSelected()
+
+        //when
+        viewModel.setAction(NoteListScreenActions.OnNoteDeletionCancelled)
+        runCurrent()
+
+        //then
+        NoteListViewModelStateVerifier.Builder(viewModel)
+            .verifyNoteForDeletionNotSelected()
+    }
 }

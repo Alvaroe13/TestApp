@@ -2,9 +2,11 @@ package com.ai.notelist.utils
 
 import com.ai.notelist.NoteListViewModel
 import junit.framework.TestCase.assertFalse
+import junit.framework.TestCase.assertNotNull
+import junit.framework.TestCase.assertNull
 import junit.framework.TestCase.assertTrue
 
-class ViewModelStateVerifier private constructor() {
+class NoteListViewModelStateVerifier private constructor() {
 
      class Builder(private val viewModel: NoteListViewModel) {
 
@@ -33,5 +35,24 @@ class ViewModelStateVerifier private constructor() {
              return this
          }
 
+         fun verifyShowDeletionTrue() : Builder {
+             assertTrue(viewModel.screenState.value.showDeleteOption)
+             return this
+         }
+
+         fun verifyShowDeletionFalse() : Builder {
+             assertFalse(viewModel.screenState.value.showDeleteOption)
+             return this
+         }
+
+         fun verifyNoteForDeletionSelected() : Builder {
+             assertNotNull(viewModel.screenState.value.noteForDeletion)
+             return this
+         }
+
+         fun verifyNoteForDeletionNotSelected() : Builder {
+             assertNull(viewModel.screenState.value.noteForDeletion)
+             return this
+         }
      }
 }
