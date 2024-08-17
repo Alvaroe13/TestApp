@@ -43,7 +43,8 @@ class NoteListViewModel @Inject constructor(
                setScreenState {
                     copy(
                         showDeleteOption = true,
-                        noteForDeletion = action.note
+                        noteForDeletion = action.note,
+                        error = false
                     )
                }
            }
@@ -57,7 +58,8 @@ class NoteListViewModel @Inject constructor(
                        .onSuccess {
                            setScreenState {
                                copy(
-                                   noteForDeletion = null
+                                   noteForDeletion = null,
+                                   error = false
                                )
                            }
                            loadNotes()
@@ -70,7 +72,7 @@ class NoteListViewModel @Inject constructor(
 
            is NoteListScreenActions.OnNoteDeletionCancelled -> {
                setScreenState {
-                   copy(showDeleteOption = false)
+                   copy(showDeleteOption = false, error = false)
                }
            }
            is NoteListScreenActions.OnSearchQueryChanged -> {
@@ -92,7 +94,10 @@ class NoteListViewModel @Inject constructor(
             notesRepository.getAllNotes()
                 .onSuccess { notes ->
                     setScreenState {
-                        copy(notes = notes)
+                        copy(
+                            notes = notes,
+                            error = false
+                        )
                     }
                 }
                 .onError {

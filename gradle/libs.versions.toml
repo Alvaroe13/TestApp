@@ -81,7 +81,6 @@ androidx_material3_navigation_suite = { module = "androidx.compose.material3:mat
 # Coroutines
 coroutines_core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 coroutines_android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
-coroutines_test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 coroutines_play_services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "coroutines" }
 kotlin_flow_extensions = { module = "com.github.akarnokd:kotlin-flow-extensions", version.ref = "flow_extensions" }
 
@@ -115,3 +114,4 @@ testng = { group = "org.testng", name = "testng", version.ref = "testng" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk"}
 mockk_android = { module = "io.mockk:mockk-android", version.ref = "mockk"}
 mockk_agent = { module = "io.mockk:mockk-agent", version.ref = "mockk"}
+coroutines_test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
