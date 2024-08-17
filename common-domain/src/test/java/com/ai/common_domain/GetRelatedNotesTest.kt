@@ -1,6 +1,5 @@
 package com.ai.common_domain
 
-import com.ai.common_domain.ResultWrapper
 import com.ai.common_domain.entities.Computer
 import com.ai.common_domain.entities.Desk
 import com.ai.common_domain.entities.Human
@@ -31,7 +30,7 @@ class GetRelatedNotesTest {
     }
 
     @Test
-    fun given_note_of_type_server_return_only_related(): Unit = runTest {
+    fun `given note of type server return only related`(): Unit = runTest {
 
         //given
         val note = makeNoteEntity(type = Server())
@@ -54,7 +53,7 @@ class GetRelatedNotesTest {
     }
 
     @Test
-    fun given_note_of_type_server_return_only_related_force_error(): Unit = runTest {
+    fun `given note of type server return only related force error`(): Unit = runTest {
 
         //given
         val note = makeNoteEntity(type = Server())
@@ -74,7 +73,7 @@ class GetRelatedNotesTest {
     }
 
     @Test
-    fun given_note_of_type_server_return_only_related_excluding_itself(): Unit = runTest {
+    fun `given note of type server return only related excluding itself`(): Unit = runTest {
         //given
         val note = makeNoteEntity(type = Server())
         val payloadReturn = getNotEntityList().toMutableList().apply { add(note) }

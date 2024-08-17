@@ -6,11 +6,10 @@ import com.ai.common_domain.respository.NotesRepository
 import com.ai.common_domain.usecase.GetNotesByQuery
 import com.ai.notelist.dispatcher.DispatcherProviderTestImpl
 import com.ai.notelist.repository.NotesRepositoryTestImpl
+import com.ai.notelist.utils.ViewModelStateVerifier
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.mockk
-import junit.framework.TestCase.assertFalse
-import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -62,8 +61,10 @@ class NoteListViewModelTest {
         runCurrent()
 
         //then
-        assertTrue(viewModel.screenState.value.notes.isEmpty())
-        assertFalse(viewModel.screenState.value.error)
+        ViewModelStateVerifier.Builder(viewModel)
+            .verifyIsNotLoading()
+            .verifyNotesAreEmpty()
+            .verifyErrorIsFalse()
     }
 
     @Test
@@ -78,8 +79,10 @@ class NoteListViewModelTest {
         runCurrent()
 
         //then
-        assertTrue(viewModel.screenState.value.notes.isEmpty())
-        assertTrue(viewModel.screenState.value.error)
+        ViewModelStateVerifier.Builder(viewModel)
+            .verifyIsNotLoading()
+            .verifyNotesAreEmpty()
+            .verifyErrorIsTrue()
     }
 
     @Test
@@ -93,8 +96,10 @@ class NoteListViewModelTest {
         runCurrent()
 
         //then
-        assertTrue(viewModel.screenState.value.notes.isEmpty())
-        assertTrue(viewModel.screenState.value.error)
+        ViewModelStateVerifier.Builder(viewModel)
+            .verifyIsNotLoading()
+            .verifyNotesAreEmpty()
+            .verifyErrorIsTrue()
     }
 
     @Test
@@ -108,8 +113,10 @@ class NoteListViewModelTest {
         runCurrent()
 
         //then
-        assertTrue(viewModel.screenState.value.notes.isEmpty())
-        assertTrue(viewModel.screenState.value.error)
+        ViewModelStateVerifier.Builder(viewModel)
+            .verifyIsNotLoading()
+            .verifyNotesAreEmpty()
+            .verifyErrorIsTrue()
 
         //when
         coEvery { notesRepository.getAllNotes() } coAnswers { ResultWrapper.Success(listOf()) }
@@ -117,8 +124,10 @@ class NoteListViewModelTest {
         runCurrent()
 
         //then
-        assertTrue(viewModel.screenState.value.notes.isEmpty())
-        assertFalse(viewModel.screenState.value.error)
+        ViewModelStateVerifier.Builder(viewModel)
+            .verifyIsNotLoading()
+            .verifyNotesAreEmpty()
+            .verifyErrorIsFalse()
     }
 
 }

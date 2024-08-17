@@ -29,7 +29,7 @@ class GetNotesByQueryTest {
     }
 
     @Test
-    fun given_empty_field_then_return_all_notes() : Unit = runTest {
+    fun `given empty field then return all notes`() : Unit = runTest {
         //given
         val query = ""
         val fakeNotes = getNotEntityList()
@@ -45,7 +45,7 @@ class GetNotesByQueryTest {
     }
 
     @Test
-    fun given_input_field_is_clean_then_return_all_notes() : Unit = runTest {
+    fun `given input field is clean then return all notes`() : Unit = runTest {
         //given
         val query = "clean"
         val fakeNotes = getNotEntityList()
@@ -64,7 +64,7 @@ class GetNotesByQueryTest {
     }
 
     @Test
-    fun given_input_field_is_soda_then_return_no_notes() : Unit = runTest {
+    fun `given input field is soda then return no notes`() : Unit = runTest {
         //given
         val query = "soda"
         val fakeNotes = getNotEntityList()
@@ -81,7 +81,7 @@ class GetNotesByQueryTest {
 
 
     @Test
-    fun given_input_field_is_soda_and_there_is_no_notes_stored_then_return_no_notes() : Unit = runTest {
+    fun `given input field is soda and there is no notes stored then return no notes`() : Unit = runTest {
         //given
         val query = "soda"
         val fakeNotes = getNotEntityList()
