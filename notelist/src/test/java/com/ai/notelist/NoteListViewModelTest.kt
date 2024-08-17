@@ -22,6 +22,11 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
+/**
+ * Inspired on this Medium article
+ * https://betterprogramming.pub/how-to-make-unit-tests-for-viewmodel-easier-to-write-and-maintain-a7efd74cc4db
+ */
+
 @OptIn(ExperimentalCoroutinesApi::class)
 class NoteListViewModelTest {
 
@@ -90,6 +95,30 @@ class NoteListViewModelTest {
         //then
         assertTrue(viewModel.screenState.value.notes.isEmpty())
         assertTrue(viewModel.screenState.value.error)
+    }
+
+    @Test
+    fun `given fetching all notes first fails then refresh page and returns success response sets error value to false`() = runTest {
+        //given
+        notesRepository = mockk()
+        coEvery { notesRepository.getAllNotes() } coAnswers { ResultWrapper.Failure(ResultWrapperError.Unknown) }
+
+        //when
+        viewModel = NoteListViewModel(dispatcherProvider, notesRepository, getNotesByQuery)
+        runCurrent()
+
+        //then
+        assertTrue(viewModel.screenState.value.notes.isEmpty())
+        assertTrue(viewModel.screenState.value.error)
+
+        //when
+        coEvery { notesRepository.getAllNotes() } coAnswers { ResultWrapper.Success(listOf()) }
+        viewModel.setAction(NoteListScreenActions.LoadNotes)
+        runCurrent()
+
+        //then
+        assertTrue(viewModel.screenState.value.notes.isEmpty())
+        assertFalse(viewModel.screenState.value.error)
     }
 
 }
