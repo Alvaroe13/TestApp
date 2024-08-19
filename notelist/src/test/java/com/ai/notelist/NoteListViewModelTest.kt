@@ -46,7 +46,7 @@ class NoteListViewModelTest {
     @Before
     fun setUp() {
         val testDispatcher = StandardTestDispatcher()
-        Dispatchers.setMain(testDispatcher)
+        Dispatchers.setMain(testDispatcher) //needed for test coroutines/suspend functions
         dispatcherProvider = DispatcherProviderTestImpl()
         getNotesByQuery = mockk()
     }
@@ -66,7 +66,7 @@ class NoteListViewModelTest {
 
         //when
         viewModel = NoteListViewModel(dispatcherProvider, notesRepository, getNotesByQuery)
-        runCurrent()
+        runCurrent() //needed for junit to be able to unit test the final outcome
 
         //then
         viewModel.apply {

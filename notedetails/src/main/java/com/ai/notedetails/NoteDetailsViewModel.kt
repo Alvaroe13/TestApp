@@ -31,7 +31,9 @@ constructor(
 ) : BaseViewModel<NoteDetailsScreenState, NoteDetailsScreenActions, NoteDetailsScreenEffect > () {
 
     init {
+        println("NoteDetailsViewModel init")
         savedStateHandle.get<String>(NOTE_ID_KEY)?.let { noteId ->
+            println("NoteDetailsViewModel init")
             setScreenState {
                 copy(noteState = NoteState.EDIT)
             }
@@ -47,6 +49,7 @@ constructor(
                 getNoteByIdUsaCase(action.noteId)
                     .onSuccess { note ->
                         setScreenState {
+                            println("NoteDetailsViewModel onSuccess note: $note")
                             currentScreenState.copy(note = note)
                         }
                         viewModelScope.launch(dispatcherProvider.ui()) {
@@ -59,12 +62,12 @@ constructor(
                         }
                     }
                     .onError {
+                        println("NoteDetailsViewModel onError")
                         setScreenState {
                             copy(error = true)
                         }
                     }
             }
-            is NoteDetailsScreenActions.UpdateNote -> {}
             is NoteDetailsScreenActions.OnTypeSelected -> {
                 setScreenState {
                     copy(
@@ -145,7 +148,6 @@ data class NoteDetailsScreenState(
 
 sealed class NoteDetailsScreenActions : Action {
     object SaveNote: NoteDetailsScreenActions()
-    data class UpdateNote(val note: NoteEntity) : NoteDetailsScreenActions()
     data class GetNoteAndRelated(val noteId: String) : NoteDetailsScreenActions()
     data class OnNameChanged(val name: String) : NoteDetailsScreenActions()
     data class OnDescriptionChanged(val description: String) : NoteDetailsScreenActions()
