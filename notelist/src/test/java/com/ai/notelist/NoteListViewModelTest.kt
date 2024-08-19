@@ -7,7 +7,14 @@ import com.ai.common_domain.respository.NotesRepository
 import com.ai.common_domain.usecase.GetNotesByQuery
 import com.ai.notelist.dispatcher.DispatcherProviderTestImpl
 import com.ai.notelist.repository.NotesRepositoryTestImpl
-import com.ai.notelist.utils.NoteListViewModelStateVerifier
+import com.ai.notelist.utils.assertErrorIsFalse
+import com.ai.notelist.utils.assertErrorIsTrue
+import com.ai.notelist.utils.assertIsNotLoading
+import com.ai.notelist.utils.assertNoteForDeletionNotSelected
+import com.ai.notelist.utils.assertNoteForDeletionSelected
+import com.ai.notelist.utils.assertNotesAreEmpty
+import com.ai.notelist.utils.assertShowDeletionFalse
+import com.ai.notelist.utils.assertShowDeletionTrue
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -62,10 +69,12 @@ class NoteListViewModelTest {
         runCurrent()
 
         //then
-        NoteListViewModelStateVerifier.Builder(viewModel)
-            .verifyIsNotLoading()
-            .verifyNotesAreEmpty()
-            .verifyErrorIsFalse()
+        viewModel.apply {
+            assertIsNotLoading()
+            assertNotesAreEmpty()
+            assertErrorIsFalse()
+        }
+
     }
 
     @Test
@@ -80,10 +89,12 @@ class NoteListViewModelTest {
         runCurrent()
 
         //then
-        NoteListViewModelStateVerifier.Builder(viewModel)
-            .verifyIsNotLoading()
-            .verifyNotesAreEmpty()
-            .verifyErrorIsTrue()
+        viewModel.apply {
+            assertIsNotLoading()
+            assertNotesAreEmpty()
+            assertErrorIsTrue()
+        }
+
     }
 
     @Test
@@ -97,10 +108,11 @@ class NoteListViewModelTest {
         runCurrent()
 
         //then
-        NoteListViewModelStateVerifier.Builder(viewModel)
-            .verifyIsNotLoading()
-            .verifyNotesAreEmpty()
-            .verifyErrorIsTrue()
+        viewModel.apply {
+            assertIsNotLoading()
+            assertNotesAreEmpty()
+            assertErrorIsTrue()
+        }
     }
 
     @Test
@@ -114,10 +126,11 @@ class NoteListViewModelTest {
         runCurrent()
 
         //then
-        NoteListViewModelStateVerifier.Builder(viewModel)
-            .verifyIsNotLoading()
-            .verifyNotesAreEmpty()
-            .verifyErrorIsTrue()
+        viewModel.apply {
+            assertIsNotLoading()
+            assertNotesAreEmpty()
+            assertErrorIsTrue()
+        }
 
         //when
         coEvery { notesRepository.getAllNotes() } coAnswers { ResultWrapper.Success(listOf()) }
@@ -125,10 +138,11 @@ class NoteListViewModelTest {
         runCurrent()
 
         //then
-        NoteListViewModelStateVerifier.Builder(viewModel)
-            .verifyIsNotLoading()
-            .verifyNotesAreEmpty()
-            .verifyErrorIsFalse()
+        viewModel.apply {
+            assertIsNotLoading()
+            assertNotesAreEmpty()
+            assertErrorIsFalse()
+        }
     }
 
     @Test
@@ -142,17 +156,19 @@ class NoteListViewModelTest {
         viewModel.setAction(NoteListScreenActions.OnNoteLongPressed(NoteEntity()))
         runCurrent()
 
-        //then
-        NoteListViewModelStateVerifier.Builder(viewModel)
-            .verifyShowDeletionTrue()
+        //then.
+        viewModel.apply {
+            assertShowDeletionTrue()
+        }
 
         //when
         viewModel.setAction(NoteListScreenActions.OnNoteDeletionCancelled)
         runCurrent()
 
         //then
-        NoteListViewModelStateVerifier.Builder(viewModel)
-            .verifyShowDeletionFalse()
+        viewModel.apply {
+            assertShowDeletionFalse()
+        }
     }
 
     @Test
@@ -167,15 +183,18 @@ class NoteListViewModelTest {
         runCurrent()
 
         //then
-        NoteListViewModelStateVerifier.Builder(viewModel)
-            .verifyNoteForDeletionSelected()
+        viewModel.apply {
+            assertNoteForDeletionSelected()
+        }
 
         //when
         viewModel.setAction(NoteListScreenActions.OnNoteDeletionCancelled)
         runCurrent()
 
         //then
-        NoteListViewModelStateVerifier.Builder(viewModel)
-            .verifyNoteForDeletionNotSelected()
+
+        viewModel.apply {
+            assertNoteForDeletionNotSelected()
+        }
     }
 }
