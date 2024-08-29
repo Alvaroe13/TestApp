@@ -46,8 +46,7 @@ constructor(
     override suspend fun handleActions(action: NoteDetailsScreenActions) {
         when(action) {
             is NoteDetailsScreenActions.GetNoteAndRelated -> {
-                getNoteByIdUsaCase(action.noteId)
-                    .onSuccess { note ->
+                getNoteByIdUsaCase(action.noteId) onSuccess { note ->
                         setScreenState {
                             println("NoteDetailsViewModel onSuccess note: $note")
                             currentScreenState.copy(note = note)
@@ -60,8 +59,7 @@ constructor(
                                     }
                                 }
                         }
-                    }
-                    .onError {
+                    } onError {
                         println("NoteDetailsViewModel onError")
                         setScreenState {
                             copy(error = true)
